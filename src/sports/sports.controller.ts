@@ -2,6 +2,7 @@ import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common'
 import { SportsService } from './sports.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
+import { CreateFixtureDto, CreateClubDto } from './sports.dto';
 
 @Controller('sports')
 @UseGuards(JwtAuthGuard)
@@ -13,12 +14,12 @@ export class SportsController {
 
   @Post('fixtures')
   @Roles('headmaster', 'sports_clubs', 'system_admin')
-  async createFixture(@Body() data: any, @Request() req: any) { return this.service.createFixture(data, req.user.tenantId); }
+  async createFixture(@Body() data: CreateFixtureDto, @Request() req: any) { return this.service.createFixture(data, req.user.tenantId); }
 
   @Get('clubs')
   async getClubs(@Request() req: any) { return this.service.getClubs(req.user.tenantId); }
 
   @Post('clubs')
   @Roles('headmaster', 'sports_clubs', 'system_admin')
-  async createClub(@Body() data: any, @Request() req: any) { return this.service.createClub(data, req.user.tenantId); }
+  async createClub(@Body() data: CreateClubDto, @Request() req: any) { return this.service.createClub(data, req.user.tenantId); }
 }

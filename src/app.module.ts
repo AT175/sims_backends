@@ -53,7 +53,7 @@ import { RolesGuard } from './auth/roles.guard';
           autoLoadEntities: true,
           synchronize: true,
           logging: isDev,
-          ssl: !isDev ? { rejectUnauthorized: false } : false,
+          ssl: !isDev ? { rejectUnauthorized: true } : false,
         };
       },
     }),

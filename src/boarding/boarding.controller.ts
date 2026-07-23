@@ -4,6 +4,7 @@ import {
 import { BoardingService } from './boarding.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
+import { CreateExeatDto, UpdateExeatStatusDto, CreateRollCallDto, CreateDisciplineLogDto } from './boarding.dto';
 
 @Controller('boarding')
 @UseGuards(JwtAuthGuard)
@@ -17,13 +18,13 @@ export class BoardingController {
 
   @Post('exeats')
   @Roles('headmaster', 'asst_headmaster_domestic', 'senior_housemaster', 'senior_housemistress', 'housemaster', 'housemistress', 'system_admin', 'registry')
-  async createExeat(@Body() data: any, @Request() req: any) {
+  async createExeat(@Body() data: CreateExeatDto, @Request() req: any) {
     return this.service.createExeat(data, req.user.tenantId);
   }
 
   @Put('exeats/:id/status')
   @Roles('headmaster', 'asst_headmaster_domestic', 'senior_housemaster', 'senior_housemistress', 'system_admin')
-  async updateExeatStatus(@Param('id', ParseUUIDPipe) id: string, @Body() body: { status: string }, @Request() req: any) {
+  async updateExeatStatus(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateExeatStatusDto, @Request() req: any) {
     return this.service.updateExeatStatus(id, body.status, req.user.displayName || 'Admin', req.user.tenantId);
   }
 
@@ -34,7 +35,7 @@ export class BoardingController {
 
   @Post('roll-call')
   @Roles('headmaster', 'asst_headmaster_domestic', 'senior_housemaster', 'senior_housemistress', 'housemaster', 'housemistress', 'system_admin')
-  async createRollCall(@Body() data: any, @Request() req: any) {
+  async createRollCall(@Body() data: CreateRollCallDto, @Request() req: any) {
     return this.service.createRollCall(data, req.user.tenantId);
   }
 
@@ -45,7 +46,7 @@ export class BoardingController {
 
   @Post('discipline')
   @Roles('headmaster', 'asst_headmaster_domestic', 'senior_housemaster', 'senior_housemistress', 'housemaster', 'housemistress', 'system_admin')
-  async createDisciplineLog(@Body() data: any, @Request() req: any) {
+  async createDisciplineLog(@Body() data: CreateDisciplineLogDto, @Request() req: any) {
     return this.service.createDisciplineLog(data, req.user.tenantId);
   }
 }

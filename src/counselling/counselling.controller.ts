@@ -2,6 +2,7 @@ import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, ParseUUIDP
 import { CounsellingService } from './counselling.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
+import { CreateCounsellingCaseDto, UpdateCaseStatusDto } from './counselling.dto';
 
 @Controller('counselling')
 @UseGuards(JwtAuthGuard)
@@ -13,11 +14,11 @@ export class CounsellingController {
 
   @Post('cases')
   @Roles('headmaster', 'counselling', 'system_admin')
-  async createCase(@Body() data: any, @Request() req: any) { return this.service.createCase(data, req.user.tenantId); }
+  async createCase(@Body() data: CreateCounsellingCaseDto, @Request() req: any) { return this.service.createCase(data, req.user.tenantId); }
 
   @Put('cases/:id/status')
   @Roles('headmaster', 'counselling', 'system_admin')
-  async updateCaseStatus(@Param('id', ParseUUIDPipe) id: string, @Body() body: { status: string }, @Request() req: any) {
+  async updateCaseStatus(@Param('id', ParseUUIDPipe) id: string, @Body() body: UpdateCaseStatusDto, @Request() req: any) {
     return this.service.updateCaseStatus(id, body.status, req.user.tenantId);
   }
 }
