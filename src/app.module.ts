@@ -11,6 +11,17 @@ import { AuditModule } from './audit/audit.module';
 import { BursaryModule } from './bursary/bursary.module';
 import { StaffModule } from './staff/staff.module';
 import { AcademicModule } from './academic/academic.module';
+import { BoardingModule } from './boarding/boarding.module';
+import { LibraryModule } from './library/library.module';
+import { SportsModule } from './sports/sports.module';
+import { PTAModule } from './pta/pta.module';
+import { TransportModule } from './transport/transport.module';
+import { SecurityModule } from './security/security.module';
+import { CleaningModule } from './cleaning/cleaning.module';
+import { ChaplainModule } from './chaplain/chaplain.module';
+import { CounsellingModule } from './counselling/counselling.module';
+import { KitchenModule } from './kitchen/kitchen.module';
+import { RequisitionModule } from './requisition/requisition.module';
 import { RolesGuard } from './auth/roles.guard';
 
 @Module({
@@ -54,6 +65,17 @@ import { RolesGuard } from './auth/roles.guard';
     BursaryModule,
     StaffModule,
     AcademicModule,
+    BoardingModule,
+    LibraryModule,
+    SportsModule,
+    PTAModule,
+    TransportModule,
+    SecurityModule,
+    CleaningModule,
+    ChaplainModule,
+    CounsellingModule,
+    KitchenModule,
+    RequisitionModule,
   ],
   providers: [
     {
