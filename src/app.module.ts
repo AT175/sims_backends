@@ -8,6 +8,9 @@ import { SyncModule } from './sync/sync.module';
 import { StudentsModule } from './students/students.module';
 import { AdmissionsModule } from './admissions/admissions.module';
 import { AuditModule } from './audit/audit.module';
+import { BursaryModule } from './bursary/bursary.module';
+import { StaffModule } from './staff/staff.module';
+import { AcademicModule } from './academic/academic.module';
 import { RolesGuard } from './auth/roles.guard';
 
 @Module({
@@ -48,6 +51,9 @@ import { RolesGuard } from './auth/roles.guard';
     StudentsModule,
     AdmissionsModule,
     AuditModule,
+    BursaryModule,
+    StaffModule,
+    AcademicModule,
   ],
   providers: [
     {
