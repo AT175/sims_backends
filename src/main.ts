@@ -1,8 +1,36 @@
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { getRepository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
+import { User } from './auth/user.entity';
+
+async function ensureAdminUser(app: any) {
+  const configService = app.get(ConfigService);
+  const adminUsername = configService.get('ADMIN_USERNAME', 'admin');
+  const adminPassword = configService.get('ADMIN_PASSWORD', 'Admin@2026');
+
+  const userRepo = app.get('UserRepository') || getRepository(User);
+  const existing = await userRepo.findOne({ where: { username: adminUsername } });
+  if (!existing) {
+    const hash = await bcrypt.hash(adminPassword, 10);
+    await userRepo.save(
+      userRepo.create({
+        username: adminUsername,
+        passwordHash: hash,
+        displayName: 'System Administrator',
+        tenantId: 'tenant-001',
+        schoolName: 'Ghana Senior High School',
+        schoolLogoUrl: null,
+        roles: ['headmaster', 'asst_headmaster_academic', 'asst_headmaster_domestic', 'bursary', 'registry'],
+        activeRole: 'headmaster',
+      })
+    );
+    console.log(`[Bootstrap] Admin user "${adminUsername}" created.`);
+  }
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -52,6 +80,8 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id'],
   });
+
+  await ensureAdminUser(app);
 
   const port = configService.get<number>('PORT', 3000);
   await app.listen(port);
