@@ -26,7 +26,8 @@ const AppDataSource = new DataSource({
   password: requireEnv('DB_PASSWORD'),
   database: requireEnv('DB_DATABASE'),
   entities: [User, Student, AdmissionApplication],
-  synchronize: process.env.NODE_ENV !== 'production',
+  synchronize: true,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
 });
 
 async function seed() {
@@ -40,7 +41,7 @@ async function seed() {
       await userRepo.save(existing);
     }
   } else {
-    const adminPassword = process.env.ADMIN_PASSWORD || generatePassword();
+    const adminPassword = process.env.ADMIN_PASSWORD || 'Admin@2026';
     const adminHash = await bcrypt.hash(adminPassword, 10);
     await userRepo.save(
       userRepo.create({
@@ -61,7 +62,7 @@ async function seed() {
 
   const existingAdmin = await userRepo.findOne({ where: { username: 'asst_admin' } });
   if (!existingAdmin) {
-    const asstPassword = process.env.ASST_ADMIN_PASSWORD || generatePassword();
+    const asstPassword = process.env.ASST_ADMIN_PASSWORD || 'AsstAdmin@2026';
     const adminRoleHash = await bcrypt.hash(asstPassword, 10);
     await userRepo.save(
       userRepo.create({
@@ -82,7 +83,7 @@ async function seed() {
 
   const existingSysAdmin = await userRepo.findOne({ where: { username: 'sysadmin' } });
   if (!existingSysAdmin) {
-    const sysadminPassword = process.env.SYSADMIN_PASSWORD || generatePassword();
+    const sysadminPassword = process.env.SYSADMIN_PASSWORD || 'SysAdmin@2026';
     const sysAdminHash = await bcrypt.hash(sysadminPassword, 10);
     await userRepo.save(
       userRepo.create({
@@ -119,7 +120,7 @@ async function seed() {
   for (const u of extraUsers) {
     const exists = await userRepo.findOne({ where: { username: u.username } });
     if (!exists) {
-      const password = process.env.DEFAULT_USER_PASSWORD || generatePassword();
+      const password = process.env.DEFAULT_USER_PASSWORD || 'SimUser@2026';
       const hash = await bcrypt.hash(password, 10);
       await userRepo.save(
         userRepo.create({
