@@ -21,6 +21,19 @@ export class SubmitAdmissionDto {
   @IsString()
   @MaxLength(50)
   csspsPlacementRef?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  programme?: string;
+}
+
+export class CheckStatusDto {
+  @IsString()
+  applicantName: string;
+
+  @IsString()
+  csspsPlacementRef: string;
 }
 
 export class UpdateAdmissionStatusDto {

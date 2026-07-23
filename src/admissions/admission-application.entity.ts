@@ -27,6 +27,9 @@ export class AdmissionApplication {
   @Column({ type: 'varchar', nullable: true })
   csspsPlacementRef: string | null;
 
+  @Column({ type: 'varchar', nullable: true })
+  programme: string | null;
+
   @Column({ default: false })
   documentsVerified: boolean;
 

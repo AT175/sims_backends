@@ -8,13 +8,14 @@ import {
   UseGuards,
   Request,
   ParseUUIDPipe,
-  BadRequestException,
 } from '@nestjs/common';
 import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { AdmissionsService } from './admissions.service';
-import { SubmitAdmissionDto, UpdateAdmissionStatusDto } from './admission.dto';
+import { SubmitAdmissionDto, UpdateAdmissionStatusDto, CheckStatusDto } from './admission.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
+
+const DEFAULT_TENANT = 'tenant-001';
 
 @Controller('admissions')
 @SkipThrottle({ default: false })
@@ -24,11 +25,14 @@ export class AdmissionsController {
   @Post('apply')
   @Throttle({ auth: { ttl: 60000, limit: 3 } })
   async submit(@Body() dto: SubmitAdmissionDto, @Request() req: any) {
-    const tenantId = req.headers['x-tenant-id'];
-    if (!tenantId) {
-      throw new BadRequestException('Tenant ID header is required');
-    }
+    const tenantId = req.headers['x-tenant-id'] || DEFAULT_TENANT;
     return this.service.submit(dto, tenantId);
+  }
+
+  @Post('check-status')
+  @Throttle({ auth: { ttl: 60000, limit: 5 } })
+  async checkStatus(@Body() dto: CheckStatusDto) {
+    return this.service.checkStatus(dto.applicantName, dto.csspsPlacementRef);
   }
 
   @Get()

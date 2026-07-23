@@ -13,12 +13,27 @@ export class AdmissionsService {
 
   async submit(dto: SubmitAdmissionDto, tenantId: string): Promise<AdmissionApplication> {
     const app = this.repo.create({
-      ...dto,
+      applicantName: dto.applicantName,
+      parentName: dto.parentName,
+      parentPhone: dto.parentPhone,
+      parentEmail: dto.parentEmail || null,
+      csspsPlacementRef: dto.csspsPlacementRef || null,
+      programme: dto.programme || null,
       tenantId,
       status: 'received',
       documentsVerified: false,
     });
     return this.repo.save(app);
+  }
+
+  async checkStatus(applicantName: string, csspsPlacementRef: string): Promise<AdmissionApplication> {
+    const app = await this.repo.findOne({
+      where: { applicantName, csspsPlacementRef },
+    });
+    if (!app) {
+      throw new NotFoundException('No application found with the provided details');
+    }
+    return app;
   }
 
   async findAll(tenantId: string): Promise<AdmissionApplication[]> {
