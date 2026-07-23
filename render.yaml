@@ -1,8 +1,9 @@
 databases:
   - name: sims-db
-    databaseName: sims
-    user: sims
+    databaseName: sims_nzww
+    user: sims_nzww_user
     plan: free
+    region: oregon
 
 services:
   - type: web
@@ -11,32 +12,24 @@ services:
     plan: free
     region: oregon
     buildCommand: npm install && npm run build
-    startCommand: npm run start:prod
+    startCommand: node dist/main.js
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
         value: production
       - key: DB_HOST
-        fromDatabase:
-          name: sims-db
-          property: host
+        value: dpg-d9h5cafavr4c73bgftv0-a.oregon-postgres.render.com
       - key: DB_PORT
-        fromDatabase:
-          name: sims-db
-          property: port
+        value: 5432
       - key: DB_USERNAME
-        fromDatabase:
-          name: sims-db
-          property: user
+        value: sims_nzww_user
       - key: DB_PASSWORD
-        fromDatabase:
-          name: sims-db
-          property: password
+        value: 6dsNzrqJqoLWp5K9zFZG4MoZMnnXRgmk
       - key: DB_DATABASE
-        fromDatabase:
-          name: sims-db
-          property: database
+        value: sims_nzww
       - key: JWT_SECRET
-        generateValue: true
+        value: sims-jwt-secret-2026-change-me
+      - key: JWT_REFRESH_SECRET
+        value: sims-refresh-secret-2026-change-me
       - key: CORS_ORIGIN
-        value: https://sims-school.netlify.app
+        value: https://sims-frontend.netlify.app
