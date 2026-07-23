@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, UnauthorizedException, BadRequestException, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, MoreThan } from 'typeorm';
@@ -431,5 +431,98 @@ export class AuthService {
       user: tempUser,
       isTempLogin: true,
     };
+  }
+
+  async createUser(data: {
+    username: string;
+    password: string;
+    displayName: string;
+    email?: string;
+    roles: string[];
+    tenantId: string;
+    activeRole?: string;
+  }) {
+    const existing = await this.userRepo.findOne({ where: { username: data.username } });
+    if (existing) {
+      throw new BadRequestException('Username already exists');
+    }
+
+    if (!data.password || data.password.length < 6) {
+      throw new BadRequestException('Password must be at least 6 characters');
+    }
+
+    const passwordHash = await bcrypt.hash(data.password, 10);
+    const user = this.userRepo.create({
+      username: data.username,
+      passwordHash,
+      displayName: data.displayName,
+      tenantId: data.tenantId,
+      schoolName: null,
+      schoolLogoUrl: null,
+      roles: data.roles,
+      activeRole: data.activeRole || data.roles[0] || 'staff',
+    });
+    await this.userRepo.save(user);
+
+    await this.auditService.log({
+      userId: user.id,
+      username: user.username,
+      action: 'user_created',
+      resource: 'users',
+      details: `Roles: ${data.roles.join(', ')}`,
+      success: true,
+    });
+
+    return {
+      id: user.id,
+      username: user.username,
+      displayName: user.displayName,
+      roles: user.roles,
+      activeRole: user.activeRole,
+      tenantId: user.tenantId,
+    };
+  }
+
+  async adminResetPassword(userId: string, newPassword: string) {
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (!newPassword || newPassword.length < 6) {
+      throw new BadRequestException('Password must be at least 6 characters');
+    }
+
+    user.passwordHash = await bcrypt.hash(newPassword, 10);
+    user.failedLoginAttempts = 0;
+    user.lockedUntil = null;
+    await this.userRepo.save(user);
+    await this.revokeAllUserRefreshTokens(user.id);
+
+    await this.auditService.log({
+      userId: user.id,
+      username: user.username,
+      action: 'admin_password_reset',
+      resource: 'users',
+      success: true,
+    });
+
+    return { message: 'Password reset successfully' };
+  }
+
+  async listUsers(tenantId?: string) {
+    const where = tenantId ? { tenantId } : {};
+    const users = await this.userRepo.find({ where });
+    return users.map((u) => ({
+      id: u.id,
+      username: u.username,
+      displayName: u.displayName,
+      roles: u.roles,
+      activeRole: u.activeRole,
+      tenantId: u.tenantId,
+      failedLoginAttempts: u.failedLoginAttempts,
+      lockedUntil: u.lockedUntil,
+      createdAt: u.createdAt,
+    }));
   }
 }

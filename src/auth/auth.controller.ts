@@ -1,5 +1,5 @@
-import { Body, Controller, Post, UseGuards, Request } from '@nestjs/common';
-import { IsString, MinLength } from 'class-validator';
+import { Body, Controller, Post, Get, Param, UseGuards, Request } from '@nestjs/common';
+import { IsString, MinLength, IsArray, IsOptional } from 'class-validator';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './jwt-auth.guard';
@@ -53,6 +53,39 @@ class MasterKeyDto {
   tenantId: string;
 
   maxUses?: number;
+}
+
+class CreateUserDto {
+  @IsString()
+  @MinLength(3)
+  username: string;
+
+  @IsString()
+  @MinLength(6)
+  password: string;
+
+  @IsString()
+  displayName: string;
+
+  @IsOptional()
+  @IsString()
+  email?: string;
+
+  @IsArray()
+  roles: string[];
+
+  @IsString()
+  tenantId: string;
+
+  @IsOptional()
+  @IsString()
+  activeRole?: string;
+}
+
+class AdminResetPasswordDto {
+  @IsString()
+  @MinLength(6)
+  newPassword: string;
 }
 
 @Controller('auth')
@@ -125,5 +158,26 @@ export class AuthController {
     const tenantId = dto.tenantId || req.user.tenantId;
     await this.authService.revokeVoterMasterKey(tenantId);
     return { message: 'Voter master key revoked' };
+  }
+
+  @Post('users')
+  @UseGuards(JwtAuthGuard)
+  @Roles('headmaster', 'system_admin')
+  async createUser(@Body() dto: CreateUserDto) {
+    return this.authService.createUser(dto);
+  }
+
+  @Post('users/:id/reset-password')
+  @UseGuards(JwtAuthGuard)
+  @Roles('headmaster', 'system_admin')
+  async adminResetPassword(@Param('id') id: string, @Body() dto: AdminResetPasswordDto) {
+    return this.authService.adminResetPassword(id, dto.newPassword);
+  }
+
+  @Get('users')
+  @UseGuards(JwtAuthGuard)
+  @Roles('headmaster', 'system_admin')
+  async listUsers(@Request() req: any) {
+    return this.authService.listUsers(req.user.tenantId);
   }
 }
