@@ -10,6 +10,7 @@ import { User } from './user.entity';
 import { Student } from '../students/student.entity';
 import { RefreshToken } from './refresh-token.entity';
 import { VoterMasterKey } from './voter-master-key.entity';
+import { TenantsModule } from '../tenants/tenants.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { VoterMasterKey } from './voter-master-key.entity';
         };
       },
     }),
+    TenantsModule,
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],

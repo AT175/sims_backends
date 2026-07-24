@@ -9,6 +9,7 @@ import { Student } from '../students/student.entity';
 import { RefreshToken } from './refresh-token.entity';
 import { VoterMasterKey } from './voter-master-key.entity';
 import { AuditService } from '../audit/audit.service';
+import { TenantsService } from '../tenants/tenants.service';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,7 @@ export class AuthService {
     private readonly masterKeyRepo: Repository<VoterMasterKey>,
     private readonly jwtService: JwtService,
     private readonly auditService: AuditService,
+    private readonly tenantsService: TenantsService,
   ) {}
 
   async validateUser(username: string, password: string): Promise<User> {
@@ -151,14 +153,17 @@ export class AuthService {
       success: true,
     });
 
+    // Fetch tenant info for school name and logo
+    const tenant = await this.tenantsService.findByKey(user.tenantId);
+
     return {
       accessToken,
       refreshToken,
       user: {
         id: user.id,
         tenantId: user.tenantId,
-        schoolName: user.schoolName,
-        schoolLogoUrl: user.schoolLogoUrl,
+        schoolName: tenant?.schoolName ?? user.schoolName,
+        schoolLogoUrl: tenant?.logoUrl ?? user.schoolLogoUrl,
         profilePictureUrl: user.profilePictureUrl,
         username: user.username,
         displayName: user.displayName,
@@ -449,6 +454,12 @@ export class AuthService {
 
     if (!data.password || data.password.length < 6) {
       throw new BadRequestException('Password must be at least 6 characters');
+    }
+
+    // Validate tenant exists
+    const tenant = await this.tenantsService.findByKey(data.tenantId);
+    if (!tenant) {
+      throw new BadRequestException(`Tenant "${data.tenantId}" does not exist`);
     }
 
     const passwordHash = await bcrypt.hash(data.password, 10);

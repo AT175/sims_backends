@@ -6,6 +6,7 @@ import * as bcrypt from 'bcrypt';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { User } from './auth/user.entity';
+import { Tenant } from './tenants/tenant.entity';
 
 async function ensureAdminUser(app: any) {
   const configService = app.get(ConfigService);
@@ -50,6 +51,34 @@ async function ensureAdminUser(app: any) {
     existing.schoolName = null;
     await userRepo.save(existing);
     console.log(`[Bootstrap] Updated user "${adminUsername}" to system_admin role.`);
+  }
+}
+
+async function ensureDefaultTenant(app: any) {
+  const tenantRepo = app.get('TenantRepository') || getRepository(Tenant);
+  const existing = await tenantRepo.findOne({ where: { tenantKey: 'tenant-001' } });
+  if (!existing) {
+    await tenantRepo.save(
+      tenantRepo.create({
+        tenantKey: 'tenant-001',
+        schoolName: 'Ghana Senior High School',
+        schoolCode: 'GSHS-001',
+        region: 'Greater Accra',
+        district: 'Accra Metropolitan',
+        address: 'P.O. Box 1234, Accra',
+        phone: '+233 30 255 0123',
+        email: 'info@gshs.edu.gh',
+        academicYear: '2026/2027',
+        term: 'Term 1',
+        maxStudents: 2000,
+        maxStaff: 150,
+        subscriptionPlan: 'Premium',
+        subscriptionExpiry: '2027-12-31',
+        enabledModules: ['Academic', 'Bursary', 'Registry', 'Admissions', 'Boarding', 'Health', 'Transport', 'Catering', 'Security', 'Library', 'Sports', 'PTA', 'Counselling'],
+        active: true,
+      }),
+    );
+    console.log('[Bootstrap] Default tenant "tenant-001" created.');
   }
 }
 
@@ -102,6 +131,7 @@ async function bootstrap() {
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Tenant-Id'],
   });
 
+  await ensureDefaultTenant(app);
   await ensureAdminUser(app);
 
   const port = configService.get<number>('PORT', 3000);
