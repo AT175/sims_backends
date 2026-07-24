@@ -13,37 +13,37 @@ export class Tenant {
   id: string;
 
   @Index({ unique: true })
-  @Column({ unique: true })
+  @Column({ type: 'varchar', unique: true })
   tenantKey: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   schoolName: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   schoolCode: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   region: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   district: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   address: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   phone: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   email: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   logoUrl: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   academicYear: string | null;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   term: string | null;
 
   @Column({ type: 'int', default: 2000 })
@@ -52,16 +52,16 @@ export class Tenant {
   @Column({ type: 'int', default: 150 })
   maxStaff: number;
 
-  @Column({ default: 'Standard' })
+  @Column({ type: 'varchar', default: 'Standard' })
   subscriptionPlan: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   subscriptionExpiry: string | null;
 
   @Column({ type: 'simple-array', default: '' })
   enabledModules: string[];
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   active: boolean;
 
   @CreateDateColumn()
