@@ -13,6 +13,19 @@ async function ensureAdminUser(app: any) {
   const adminPassword = configService.get('ADMIN_PASSWORD', 'SysAdmin@2026');
 
   const userRepo = app.get('UserRepository') || getRepository(User);
+
+  // Migrate old 'admin' user: if it exists with headmaster roles, convert to system_admin
+  const oldAdmin = await userRepo.findOne({ where: { username: 'admin' } });
+  if (oldAdmin && !oldAdmin.roles.includes('system_admin')) {
+    oldAdmin.roles = ['system_admin'];
+    oldAdmin.activeRole = 'system_admin';
+    oldAdmin.displayName = 'System Administrator';
+    oldAdmin.schoolName = null;
+    await userRepo.save(oldAdmin);
+    console.log('[Bootstrap] Migrated old "admin" user to system_admin role.');
+  }
+
+  // Ensure the proper sysadmin user exists with correct roles
   const existing = await userRepo.findOne({ where: { username: adminUsername } });
   if (!existing) {
     const hash = await bcrypt.hash(adminPassword, 10);
@@ -29,6 +42,14 @@ async function ensureAdminUser(app: any) {
       })
     );
     console.log(`[Bootstrap] System admin user "${adminUsername}" created.`);
+  } else if (!existing.roles.includes('system_admin')) {
+    // Fix roles if the existing user doesn't have system_admin
+    existing.roles = ['system_admin'];
+    existing.activeRole = 'system_admin';
+    existing.displayName = 'System Administrator';
+    existing.schoolName = null;
+    await userRepo.save(existing);
+    console.log(`[Bootstrap] Updated user "${adminUsername}" to system_admin role.`);
   }
 }
 
