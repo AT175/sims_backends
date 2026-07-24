@@ -75,8 +75,9 @@ class CreateUserDto {
   @IsArray()
   roles: string[];
 
+  @IsOptional()
   @IsString()
-  tenantId: string;
+  tenantId?: string;
 
   @IsOptional()
   @IsString()
@@ -170,8 +171,9 @@ export class AuthController {
   @Post('users')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
-  async createUser(@Body() dto: CreateUserDto) {
-    return this.authService.createUser(dto);
+  async createUser(@Body() dto: CreateUserDto, @Request() req: any) {
+    const tenantId = dto.tenantId || req.user.tenantId;
+    return this.authService.createUser({ ...dto, tenantId });
   }
 
   @Post('users/:id/reset-password')
