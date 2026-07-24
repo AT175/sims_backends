@@ -94,6 +94,12 @@ class AdminResetPasswordDto {
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Get('health')
+  @SkipThrottle()
+  async health() {
+    return { status: 'ok', timestamp: new Date().toISOString() };
+  }
+
   @Post('login')
   @Throttle({ auth: { ttl: 60000, limit: 5 } })
   async login(@Body() dto: LoginDto) {
