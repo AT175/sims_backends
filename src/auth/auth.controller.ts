@@ -116,13 +116,13 @@ export class AuthController {
   }
 
   @Post('login')
-  @Throttle({ auth: { ttl: 60000, limit: 5 } })
+  @Throttle({ auth: { ttl: 60000, limit: 20 } })
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto.username, dto.password);
   }
 
   @Post('login-temp')
-  @Throttle({ auth: { ttl: 60000, limit: 5 } })
+  @Throttle({ auth: { ttl: 60000, limit: 20 } })
   async loginTemp(@Body() dto: LoginDto) {
     return this.authService.loginWithTempCredentials(dto.username, dto.password);
   }
@@ -185,6 +185,7 @@ export class AuthController {
   @Post('users')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
+  @SkipThrottle()
   async createUser(@Body() dto: CreateUserDto, @Request() req: any) {
     const tenantId = dto.tenantId || req.user.tenantId;
     return this.authService.createUser({ ...dto, tenantId });

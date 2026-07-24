@@ -9,6 +9,7 @@ import {
   UseGuards,
   Query,
 } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { IsString, MinLength, IsOptional, IsInt, IsArray, IsBoolean } from 'class-validator';
 import { TenantsService } from './tenants.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -197,6 +198,7 @@ class UpdateTenantDto {
 
 @Controller('tenants')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@SkipThrottle()
 export class TenantsController {
   constructor(private readonly tenantsService: TenantsService) {}
 
