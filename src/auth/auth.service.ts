@@ -552,10 +552,17 @@ export class AuthService {
     };
   }
 
-  async updateUser(userId: string, data: { displayName?: string; roles?: string[] }) {
+  async updateUser(userId: string, data: { displayName?: string; username?: string; roles?: string[] }) {
     const user = await this.userRepo.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException('User not found');
+    }
+    if (data.username !== undefined && data.username !== user.username) {
+      const existing = await this.userRepo.findOne({ where: { username: data.username } });
+      if (existing) {
+        throw new BadRequestException('Username already taken');
+      }
+      user.username = data.username;
     }
     if (data.displayName !== undefined) {
       user.displayName = data.displayName;

@@ -96,6 +96,10 @@ class UpdateUserDto {
   displayName?: string;
 
   @IsOptional()
+  @IsString()
+  username?: string;
+
+  @IsOptional()
   @IsArray()
   roles?: string[];
 }
@@ -189,6 +193,7 @@ export class AuthController {
   @Post('users/:id/reset-password')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
+  @SkipThrottle()
   async adminResetPassword(@Param('id') id: string, @Body() dto: AdminResetPasswordDto) {
     return this.authService.adminResetPassword(id, dto.newPassword);
   }
@@ -196,6 +201,7 @@ export class AuthController {
   @Get('users')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
+  @SkipThrottle()
   async listUsers(@Request() req: any) {
     return this.authService.listUsers(req.user.tenantId);
   }
@@ -203,6 +209,7 @@ export class AuthController {
   @Get('users/:tenantId/headmaster')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('system_admin', 'headmaster')
+  @SkipThrottle()
   async getHeadmasterByTenant(@Param('tenantId') tenantId: string) {
     return this.authService.getHeadmasterByTenant(tenantId);
   }
@@ -210,6 +217,7 @@ export class AuthController {
   @Put('users/:id')
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
+  @SkipThrottle()
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.authService.updateUser(id, dto);
   }
