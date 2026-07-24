@@ -536,4 +536,52 @@ export class AuthService {
       createdAt: u.createdAt,
     }));
   }
+
+  async getHeadmasterByTenant(tenantId: string) {
+    const users = await this.userRepo.find({ where: { tenantId } });
+    const headmaster = users.find((u) => u.roles.includes('headmaster'));
+    if (!headmaster) {
+      throw new NotFoundException('No headmaster found for this tenant');
+    }
+    return {
+      id: headmaster.id,
+      username: headmaster.username,
+      displayName: headmaster.displayName,
+      roles: headmaster.roles,
+      tenantId: headmaster.tenantId,
+    };
+  }
+
+  async updateUser(userId: string, data: { displayName?: string; roles?: string[] }) {
+    const user = await this.userRepo.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    if (data.displayName !== undefined) {
+      user.displayName = data.displayName;
+    }
+    if (data.roles !== undefined) {
+      user.roles = data.roles;
+      user.activeRole = data.roles[0] || user.activeRole;
+    }
+    await this.userRepo.save(user);
+
+    await this.auditService.log({
+      userId: user.id,
+      username: user.username,
+      action: 'user_updated',
+      resource: 'users',
+      details: `Updated by admin`,
+      success: true,
+    });
+
+    return {
+      id: user.id,
+      username: user.username,
+      displayName: user.displayName,
+      roles: user.roles,
+      activeRole: user.activeRole,
+      tenantId: user.tenantId,
+    };
+  }
 }

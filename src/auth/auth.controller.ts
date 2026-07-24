@@ -1,5 +1,5 @@
 import { RolesGuard } from './roles.guard';
-import { Body, Controller, Post, Get, Param, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Param, UseGuards, Request } from '@nestjs/common';
 import { IsString, MinLength, IsArray, IsOptional } from 'class-validator';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
@@ -88,6 +88,16 @@ class AdminResetPasswordDto {
   @IsString()
   @MinLength(6)
   newPassword: string;
+}
+
+class UpdateUserDto {
+  @IsOptional()
+  @IsString()
+  displayName?: string;
+
+  @IsOptional()
+  @IsArray()
+  roles?: string[];
 }
 
 @Controller('auth')
@@ -188,5 +198,19 @@ export class AuthController {
   @Roles('headmaster', 'system_admin')
   async listUsers(@Request() req: any) {
     return this.authService.listUsers(req.user.tenantId);
+  }
+
+  @Get('users/:tenantId/headmaster')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('system_admin', 'headmaster')
+  async getHeadmasterByTenant(@Param('tenantId') tenantId: string) {
+    return this.authService.getHeadmasterByTenant(tenantId);
+  }
+
+  @Put('users/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('headmaster', 'system_admin')
+  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
+    return this.authService.updateUser(id, dto);
   }
 }
