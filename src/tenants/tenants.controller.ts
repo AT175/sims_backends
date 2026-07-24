@@ -133,6 +133,66 @@ class UpdateTenantDto {
   @IsOptional()
   @IsBoolean()
   active?: boolean;
+
+  @IsOptional()
+  @IsString()
+  motto?: string;
+
+  @IsOptional()
+  @IsString()
+  primaryColor?: string;
+
+  @IsOptional()
+  @IsString()
+  secondaryColor?: string;
+
+  @IsOptional()
+  @IsString()
+  bannerImage?: string;
+
+  @IsOptional()
+  @IsString()
+  aboutText?: string;
+
+  @IsOptional()
+  @IsString()
+  mission?: string;
+
+  @IsOptional()
+  @IsString()
+  vision?: string;
+
+  @IsOptional()
+  @IsString()
+  principalsMessage?: string;
+
+  @IsOptional()
+  @IsString()
+  admissionsInfo?: string;
+
+  @IsOptional()
+  @IsString()
+  facebookUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  instagramUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  twitterUrl?: string;
+
+  @IsOptional()
+  @IsArray()
+  newsItems?: { title: string; body: string; date: string }[];
+
+  @IsOptional()
+  @IsArray()
+  galleryImages?: string[];
+
+  @IsOptional()
+  @IsString()
+  customDomain?: string;
 }
 
 @Controller('tenants')
@@ -159,7 +219,7 @@ export class TenantsController {
   }
 
   @Put(':id')
-  @Roles('system_admin')
+  @Roles('system_admin', 'headmaster')
   async update(@Param('id') id: string, @Body() dto: UpdateTenantDto) {
     return this.tenantsService.update(id, dto);
   }

@@ -81,10 +81,57 @@ export class TenantsService {
     subscriptionExpiry: string;
     enabledModules: string[];
     active: boolean;
+    motto: string;
+    primaryColor: string;
+    secondaryColor: string;
+    bannerImage: string;
+    aboutText: string;
+    mission: string;
+    vision: string;
+    principalsMessage: string;
+    admissionsInfo: string;
+    facebookUrl: string;
+    instagramUrl: string;
+    twitterUrl: string;
+    newsItems: { title: string; body: string; date: string }[];
+    galleryImages: string[];
+    customDomain: string;
   }>): Promise<Tenant> {
     const tenant = await this.findOne(id);
     Object.assign(tenant, data);
     return this.tenantRepo.save(tenant);
+  }
+
+  async getPublicBranding(tenantKey: string) {
+    const tenant = await this.tenantRepo.findOne({ where: { tenantKey, active: true } });
+    if (!tenant) {
+      throw new NotFoundException('School not found');
+    }
+    return {
+      tenantKey: tenant.tenantKey,
+      schoolName: tenant.schoolName,
+      schoolCode: tenant.schoolCode,
+      logoUrl: tenant.logoUrl,
+      motto: tenant.motto,
+      primaryColor: tenant.primaryColor || '#1a73e8',
+      secondaryColor: tenant.secondaryColor || '#ffffff',
+      bannerImage: tenant.bannerImage,
+      aboutText: tenant.aboutText,
+      mission: tenant.mission,
+      vision: tenant.vision,
+      principalsMessage: tenant.principalsMessage,
+      admissionsInfo: tenant.admissionsInfo,
+      phone: tenant.phone,
+      email: tenant.email,
+      address: tenant.address,
+      region: tenant.region,
+      district: tenant.district,
+      facebookUrl: tenant.facebookUrl,
+      instagramUrl: tenant.instagramUrl,
+      twitterUrl: tenant.twitterUrl,
+      newsItems: tenant.newsItems || [],
+      galleryImages: tenant.galleryImages || [],
+    };
   }
 
   async remove(id: string): Promise<{ message: string }> {

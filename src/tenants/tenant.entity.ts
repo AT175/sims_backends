@@ -64,6 +64,53 @@ export class Tenant {
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
+  // ── Branding & Website Fields ──
+
+  @Column({ type: 'varchar', nullable: true })
+  motto: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  primaryColor: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  secondaryColor: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  bannerImage: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  aboutText: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  mission: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  vision: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  principalsMessage: string | null;
+
+  @Column({ type: 'text', nullable: true })
+  admissionsInfo: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  facebookUrl: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  instagramUrl: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  twitterUrl: string | null;
+
+  @Column({ type: 'simple-json', nullable: true })
+  newsItems: { title: string; body: string; date: string }[] | null;
+
+  @Column({ type: 'simple-json', nullable: true })
+  galleryImages: string[] | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  customDomain: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
