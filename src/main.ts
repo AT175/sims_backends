@@ -9,8 +9,8 @@ import { User } from './auth/user.entity';
 
 async function ensureAdminUser(app: any) {
   const configService = app.get(ConfigService);
-  const adminUsername = configService.get('ADMIN_USERNAME', 'admin');
-  const adminPassword = configService.get('ADMIN_PASSWORD', 'Admin@2026');
+  const adminUsername = configService.get('ADMIN_USERNAME', 'sysadmin');
+  const adminPassword = configService.get('ADMIN_PASSWORD', 'SysAdmin@2026');
 
   const userRepo = app.get('UserRepository') || getRepository(User);
   const existing = await userRepo.findOne({ where: { username: adminUsername } });
@@ -22,13 +22,13 @@ async function ensureAdminUser(app: any) {
         passwordHash: hash,
         displayName: 'System Administrator',
         tenantId: 'tenant-001',
-        schoolName: 'Ghana Senior High School',
+        schoolName: null,
         schoolLogoUrl: null,
-        roles: ['headmaster', 'asst_headmaster_academic', 'asst_headmaster_domestic', 'bursary', 'registry'],
-        activeRole: 'headmaster',
+        roles: ['system_admin'],
+        activeRole: 'system_admin',
       })
     );
-    console.log(`[Bootstrap] Admin user "${adminUsername}" created.`);
+    console.log(`[Bootstrap] System admin user "${adminUsername}" created.`);
   }
 }
 
