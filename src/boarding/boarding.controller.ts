@@ -1,3 +1,4 @@
+import { RolesGuard } from '../auth/roles.guard';
 import {
   Controller, Get, Post, Put, Body, Param, Query, UseGuards, Request, ParseUUIDPipe,
 } from '@nestjs/common';
@@ -7,7 +8,7 @@ import { Roles } from '../auth/roles.decorator';
 import { CreateExeatDto, UpdateExeatStatusDto, CreateRollCallDto, CreateDisciplineLogDto } from './boarding.dto';
 
 @Controller('boarding')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class BoardingController {
   constructor(private readonly service: BoardingService) {}
 

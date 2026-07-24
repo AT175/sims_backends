@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
-import { APP_GUARD, Reflector } from '@nestjs/core';
+import { APP_GUARD } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
 import { SyncModule } from './sync/sync.module';
 import { StudentsModule } from './students/students.module';
@@ -23,6 +23,7 @@ import { CounsellingModule } from './counselling/counselling.module';
 import { KitchenModule } from './kitchen/kitchen.module';
 import { RequisitionModule } from './requisition/requisition.module';
 import { RolesGuard } from './auth/roles.guard';
+import { Reflector } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -81,10 +82,6 @@ import { RolesGuard } from './auth/roles.guard';
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
-    },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
     },
     Reflector,
   ],

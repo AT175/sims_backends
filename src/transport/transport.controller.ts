@@ -1,3 +1,4 @@
+import { RolesGuard } from '../auth/roles.guard';
 import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { TransportService } from './transport.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -5,7 +6,7 @@ import { Roles } from '../auth/roles.decorator';
 import { CreateVehicleDto, CreateTripDto } from './transport.dto';
 
 @Controller('transport')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class TransportController {
   constructor(private readonly service: TransportService) {}
 

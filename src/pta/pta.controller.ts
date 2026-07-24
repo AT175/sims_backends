@@ -1,10 +1,11 @@
+import { RolesGuard } from '../auth/roles.guard';
 import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, ParseUUIDPipe } from '@nestjs/common';
 import { PTAService } from './pta.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateAnnouncementDto, CreateMeetingDto, UpdateRSVPDto } from './pta.dto';
 
 @Controller('pta')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class PTAController {
   constructor(private readonly service: PTAService) {}
 

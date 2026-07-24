@@ -1,3 +1,4 @@
+import { RolesGuard } from '../auth/roles.guard';
 import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { KitchenService } from './kitchen.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -5,7 +6,7 @@ import { Roles } from '../auth/roles.decorator';
 import { CreateStockDto, CreateMenuDto } from './kitchen.dto';
 
 @Controller('kitchen')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class KitchenController {
   constructor(private readonly service: KitchenService) {}
 

@@ -1,3 +1,4 @@
+import { RolesGuard } from '../auth/roles.guard';
 import {
   Controller,
   Get,
@@ -36,21 +37,21 @@ export class AdmissionsController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'asst_headmaster_admin', 'registry', 'system_admin')
   async findAll(@Request() req: any) {
     return this.service.findAll(req.user.tenantId);
   }
 
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'asst_headmaster_admin', 'registry', 'system_admin')
   async findOne(@Param('id', ParseUUIDPipe) id: string, @Request() req: any) {
     return this.service.findOne(id, req.user.tenantId);
   }
 
   @Put(':id/status')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'asst_headmaster_admin', 'registry', 'system_admin')
   async updateStatus(
     @Param('id', ParseUUIDPipe) id: string,

@@ -1,3 +1,4 @@
+import { RolesGuard } from './roles.guard';
 import { Body, Controller, Post, Get, Param, UseGuards, Request } from '@nestjs/common';
 import { IsString, MinLength, IsArray, IsOptional } from 'class-validator';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
@@ -106,25 +107,25 @@ export class AuthController {
   }
 
   @Post('update-profile')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async updateProfile(@Request() req: any, @Body() dto: UpdateProfileDto) {
     return this.authService.updateProfile(req.user.id, dto);
   }
 
   @Post('change-password')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async changePassword(@Request() req: any, @Body() dto: ChangePasswordDto) {
     return this.authService.changePassword(req.user.id, dto.currentPassword, dto.newPassword);
   }
 
   @Post('upload-profile-picture')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async uploadProfilePicture(@Request() req: any, @Body() dto: UploadPictureDto) {
     return this.authService.uploadProfilePicture(req.user.id, dto.image);
   }
 
   @Post('switch-role')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async switchRole(@Request() req: any, @Body() dto: SwitchRoleDto) {
     return this.authService.switchRole(req.user.id, dto.role);
   }
@@ -136,7 +137,7 @@ export class AuthController {
   }
 
   @Post('logout')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   async logout(@Request() req: any, @Body() dto: RefreshTokenDto) {
     await this.authService.revokeRefreshToken(dto.refreshToken);
     await this.authService.revokeAllUserRefreshTokens(req.user.id);
@@ -144,7 +145,7 @@ export class AuthController {
   }
 
   @Post('voter-master-key')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
   async createVoterMasterKey(@Request() req: any, @Body() dto: MasterKeyDto) {
     const tenantId = dto.tenantId || req.user.tenantId;
@@ -152,7 +153,7 @@ export class AuthController {
   }
 
   @Post('revoke-voter-master-key')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
   async revokeVoterMasterKey(@Request() req: any, @Body() dto: MasterKeyDto) {
     const tenantId = dto.tenantId || req.user.tenantId;
@@ -161,21 +162,21 @@ export class AuthController {
   }
 
   @Post('users')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
   async createUser(@Body() dto: CreateUserDto) {
     return this.authService.createUser(dto);
   }
 
   @Post('users/:id/reset-password')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
   async adminResetPassword(@Param('id') id: string, @Body() dto: AdminResetPasswordDto) {
     return this.authService.adminResetPassword(id, dto.newPassword);
   }
 
   @Get('users')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
   async listUsers(@Request() req: any) {
     return this.authService.listUsers(req.user.tenantId);

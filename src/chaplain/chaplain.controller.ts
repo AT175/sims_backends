@@ -1,3 +1,4 @@
+import { RolesGuard } from '../auth/roles.guard';
 import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { ChaplainService } from './chaplain.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -5,7 +6,7 @@ import { Roles } from '../auth/roles.decorator';
 import { CreatePrayerRequestDto, CreateSpiritualCounsellingDto } from './chaplain.dto';
 
 @Controller('chaplain')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class ChaplainController {
   constructor(private readonly service: ChaplainService) {}
 

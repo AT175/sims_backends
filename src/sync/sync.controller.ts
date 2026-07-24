@@ -1,3 +1,4 @@
+import { RolesGuard } from '../auth/roles.guard';
 import {
   Controller,
   Post,
@@ -13,7 +14,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 
 @Controller('sync')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class SyncController {
   constructor(private readonly syncService: SyncService) {}
 
