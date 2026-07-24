@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import * as fs from 'fs';
 import { DataSource } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
@@ -27,7 +28,7 @@ const AppDataSource = new DataSource({
   database: requireEnv('DB_DATABASE'),
   entities: [User, Student, AdmissionApplication],
   synchronize: true,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: true, ca: fs.readFileSync('global-bundle.pem').toString() } : false,
 });
 
 async function seed() {

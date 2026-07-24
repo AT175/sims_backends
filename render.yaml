@@ -1,32 +1,25 @@
-databases:
-  - name: sims-db
-    databaseName: sims_nzww
-    user: sims_nzww_user
-    plan: free
-    region: oregon
-
 services:
   - type: web
     name: sims-backend
     runtime: node
     plan: free
     region: oregon
-    buildCommand: npm install && npm run build && npm run seed
+    buildCommand: curl -o global-bundle.pem https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem && npm install && npm run build && npm run seed
     startCommand: node dist/main.js
     healthCheckPath: /api
     envVars:
       - key: NODE_ENV
         value: production
       - key: DB_HOST
-        value: dpg-d9h5cafavr4c73bgftv0-a.oregon-postgres.render.com
+        value: sims.czsimqw60v3d.sa-east-1.rds.amazonaws.com
       - key: DB_PORT
         value: 5432
       - key: DB_USERNAME
-        value: sims_nzww_user
+        value: postgres
       - key: DB_PASSWORD
-        value: 6dsNzrqJqoLWp5K9zFZG4MoZMnnXRgmk
+        value: Echendaa
       - key: DB_DATABASE
-        value: sims_nzww
+        value: postgres
       - key: JWT_SECRET
         value: sims-jwt-secret-2026-change-me
       - key: JWT_REFRESH_SECRET

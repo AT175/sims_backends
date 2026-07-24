@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -54,7 +55,7 @@ import { Reflector } from '@nestjs/core';
           autoLoadEntities: true,
           synchronize: true,
           logging: isDev,
-          ssl: !isDev ? { rejectUnauthorized: true } : false,
+          ssl: !isDev ? { rejectUnauthorized: true, ca: fs.readFileSync('global-bundle.pem').toString() } : false,
         };
       },
     }),
