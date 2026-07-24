@@ -541,7 +541,7 @@ export class AuthService {
     const users = await this.userRepo.find({ where: { tenantId } });
     const headmaster = users.find((u) => u.roles.includes('headmaster'));
     if (!headmaster) {
-      throw new NotFoundException('No headmaster found for this tenant');
+      return null;
     }
     return {
       id: headmaster.id,
