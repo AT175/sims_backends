@@ -55,7 +55,7 @@ import { Reflector } from '@nestjs/core';
           autoLoadEntities: true,
           synchronize: true,
           logging: isDev,
-          ssl: !isDev ? { rejectUnauthorized: true, ca: fs.readFileSync('global-bundle.pem').toString() } : false,
+          ssl: fs.existsSync('global-bundle.pem') ? { rejectUnauthorized: true, ca: fs.readFileSync('global-bundle.pem').toString() } : false,
         };
       },
     }),

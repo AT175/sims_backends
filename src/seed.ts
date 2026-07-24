@@ -28,7 +28,7 @@ const AppDataSource = new DataSource({
   database: requireEnv('DB_DATABASE'),
   entities: [User, Student, AdmissionApplication],
   synchronize: true,
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: true, ca: fs.readFileSync('global-bundle.pem').toString() } : false,
+  ssl: fs.existsSync('global-bundle.pem') ? { rejectUnauthorized: true, ca: fs.readFileSync('global-bundle.pem').toString() } : false,
 });
 
 async function seed() {
