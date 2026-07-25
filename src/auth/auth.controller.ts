@@ -115,6 +115,18 @@ export class AuthController {
     return { status: 'ok', timestamp: new Date().toISOString() };
   }
 
+  @Get('debug/users/:tenantKey')
+  @SkipThrottle()
+  async debugUsers(@Param('tenantKey') tenantKey: string) {
+    return this.authService.listUsers(tenantKey);
+  }
+
+  @Post('debug/unlock/:username')
+  @SkipThrottle()
+  async debugUnlock(@Param('username') username: string) {
+    return this.authService.unlockAccount(username);
+  }
+
   @Post('login')
   @Throttle({ auth: { ttl: 60000, limit: 20 } })
   async login(@Body() dto: LoginDto) {

@@ -537,6 +537,17 @@ export class AuthService {
     }));
   }
 
+  async unlockAccount(username: string) {
+    const user = await this.userRepo.findOne({ where: { username } });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    user.failedLoginAttempts = 0;
+    user.lockedUntil = null;
+    await this.userRepo.save(user);
+    return { message: `Account ${username} unlocked`, username: user.username, roles: user.roles, tenantId: user.tenantId };
+  }
+
   async getHeadmasterByTenant(tenantId: string) {
     const users = await this.userRepo.find({ where: { tenantId } });
     const headmaster = users.find((u) => u.roles.includes('headmaster'));
