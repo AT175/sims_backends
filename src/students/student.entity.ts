@@ -95,6 +95,9 @@ export class Student {
   @Column({ type: 'boolean', default: false })
   tempUsed: boolean;
 
+  @Column({ type: 'varchar', nullable: true })
+  verificationCode: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 

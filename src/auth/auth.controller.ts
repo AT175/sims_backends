@@ -44,6 +44,15 @@ class UploadPictureDto {
   image: string;
 }
 
+class VerifyCodeDto {
+  @IsString()
+  code: string;
+
+  @IsString()
+  @MinLength(3)
+  username: string;
+}
+
 class RefreshTokenDto {
   @IsString()
   refreshToken: string;
@@ -128,15 +137,21 @@ export class AuthController {
   }
 
   @Post('login')
-  @Throttle({ auth: { ttl: 60000, limit: 20 } })
+  @Throttle({ auth: { ttl: 60000, limit: 5 } })
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto.username, dto.password);
   }
 
   @Post('login-temp')
-  @Throttle({ auth: { ttl: 60000, limit: 20 } })
+  @Throttle({ auth: { ttl: 60000, limit: 5 } })
   async loginTemp(@Body() dto: LoginDto) {
     return this.authService.loginWithTempCredentials(dto.username, dto.password);
+  }
+
+  @Post('verify-code')
+  @Throttle({ auth: { ttl: 60000, limit: 5 } })
+  async verifyCode(@Body() dto: VerifyCodeDto) {
+    return this.authService.verifyCode(dto.username, dto.code);
   }
 
   @Post('update-profile')

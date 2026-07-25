@@ -135,7 +135,7 @@ export class StudentsService {
     }));
   }
 
-  async generateTempCredentials(studentId: string, tenantId: string): Promise<{ success: boolean; username: string; password: string; expiresAt: Date }> {
+  async generateTempCredentials(studentId: string, tenantId: string): Promise<{ success: boolean; username: string; password: string; verificationCode: string; expiresAt: Date }> {
     const student = await this.repo.findOne({ where: { id: studentId, tenantId } });
     if (!student) {
       throw new NotFoundException('Student not found');
@@ -143,16 +143,18 @@ export class StudentsService {
 
     const username = `VOTER_${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
     const password = crypto.randomBytes(8).toString('hex').toUpperCase();
+    const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 2);
 
     student.tempUsername = username;
     student.tempPasswordHash = await bcrypt.hash(password, 10);
+    student.verificationCode = verificationCode;
     student.tempExpiresAt = expiresAt;
     student.tempUsed = false;
     await this.repo.save(student);
 
-    return { success: true, username, password, expiresAt };
+    return { success: true, username, password, verificationCode, expiresAt };
   }
 
   async verifyVoter(voterId: string, tenantId: string): Promise<{ success: boolean; student?: any }> {

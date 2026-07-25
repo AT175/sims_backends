@@ -438,6 +438,74 @@ export class AuthService {
     };
   }
 
+  async verifyCode(username: string, code: string) {
+    if (!username || !code) {
+      throw new BadRequestException('Username and verification code are required');
+    }
+
+    const student = await this.studentRepo.findOne({ where: { tempUsername: username } });
+    if (!student || !student.verificationCode) {
+      throw new UnauthorizedException('Invalid verification request');
+    }
+
+    if (student.tempExpiresAt && new Date() > student.tempExpiresAt) {
+      throw new UnauthorizedException('Verification window has expired. Please request new credentials.');
+    }
+
+    if (student.verificationCode !== code.trim()) {
+      await this.auditService.log({
+        userId: student.id,
+        username: student.tempUsername,
+        action: 'verify_code_failed',
+        resource: 'auth',
+        details: 'Incorrect verification code',
+        success: false,
+      });
+      throw new UnauthorizedException('Invalid verification code');
+    }
+
+    // Clear the verification code so it can't be reused
+    student.verificationCode = null;
+    await this.studentRepo.save(student);
+
+    await this.auditService.log({
+      userId: student.id,
+      username: student.tempUsername,
+      action: 'verify_code_success',
+      resource: 'auth',
+      details: 'Identity verified successfully',
+      success: true,
+    });
+
+    const payload = {
+      sub: student.id,
+      tenantId: student.tenantId,
+      username: student.tempUsername,
+      roles: ['voter'],
+      activeRole: 'voter',
+      isTempLogin: false,
+    };
+
+    const accessToken = this.jwtService.sign(payload, { expiresIn: '2h' });
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '2h' });
+
+    return {
+      accessToken,
+      refreshToken,
+      user: {
+        id: student.id,
+        tenantId: student.tenantId,
+        schoolName: 'SIMS High School',
+        schoolLogoUrl: null,
+        profilePictureUrl: student.photoUrl,
+        username: student.tempUsername,
+        displayName: `${student.firstName} ${student.lastName}`,
+        roles: ['voter'],
+        activeRole: 'voter',
+      },
+    };
+  }
+
   async createUser(data: {
     username: string;
     password: string;
