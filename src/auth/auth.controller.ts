@@ -1,5 +1,5 @@
 import { RolesGuard } from './roles.guard';
-import { Body, Controller, Post, Get, Put, Param, UseGuards, Request } from '@nestjs/common';
+import { Body, Controller, Post, Get, Put, Param, UseGuards, Request, Query } from '@nestjs/common';
 import { IsString, MinLength, IsArray, IsOptional } from 'class-validator';
 import { SkipThrottle, Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
@@ -215,8 +215,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
   @SkipThrottle()
-  async listUsers(@Request() req: any) {
-    return this.authService.listUsers(req.user.tenantId);
+  async listUsers(@Request() req: any, @Query('tenantId') tenantId?: string) {
+    return this.authService.listUsers(tenantId || req.user.tenantId);
   }
 
   @Get('users/:tenantId/headmaster')
