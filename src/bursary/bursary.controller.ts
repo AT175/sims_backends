@@ -7,6 +7,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { BursaryService } from './bursary.service';
 import { CreateFeeRecordDto, RecordPaymentDto } from './bursary.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -14,6 +15,7 @@ import { Roles } from '../auth/roles.decorator';
 
 @Controller('bursary')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@SkipThrottle()
 export class BursaryController {
   constructor(private readonly service: BursaryService) {}
 

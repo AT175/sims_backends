@@ -8,6 +8,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { AcademicService } from './academic.service';
 import { CreateTimetableEntryDto, CreateExamResultDto, CreateAttendanceDto } from './academic.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -15,6 +16,7 @@ import { Roles } from '../auth/roles.decorator';
 
 @Controller('academic')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@SkipThrottle()
 export class AcademicController {
   constructor(private readonly service: AcademicService) {}
 

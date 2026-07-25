@@ -1,5 +1,6 @@
 import { RolesGuard } from '../auth/roles.guard';
 import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, ParseUUIDPipe } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { CounsellingService } from './counselling.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -7,6 +8,7 @@ import { CreateCounsellingCaseDto, UpdateCaseStatusDto } from './counselling.dto
 
 @Controller('counselling')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@SkipThrottle()
 export class CounsellingController {
   constructor(private readonly service: CounsellingService) {}
 

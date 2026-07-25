@@ -9,12 +9,14 @@ import {
   Request,
   BadRequestException,
 } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { SyncService, PushRequest } from './sync.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 
 @Controller('sync')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@SkipThrottle()
 export class SyncController {
   constructor(private readonly syncService: SyncService) {}
 

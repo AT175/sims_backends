@@ -11,6 +11,7 @@ import {
   Request,
   ParseUUIDPipe,
 } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { StudentsService } from './students.service';
 import { CreateStudentDto, UpdateStudentDto } from './student.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -18,6 +19,7 @@ import { Roles } from '../auth/roles.decorator';
 
 @Controller('students')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@SkipThrottle()
 export class StudentsController {
   constructor(private readonly service: StudentsService) {}
 

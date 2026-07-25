@@ -2,6 +2,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import {
   Controller, Get, Post, Put, Body, Param, Query, UseGuards, Request, ParseUUIDPipe,
 } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { BoardingService } from './boarding.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -9,6 +10,7 @@ import { CreateExeatDto, UpdateExeatStatusDto, CreateRollCallDto, CreateDiscipli
 
 @Controller('boarding')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@SkipThrottle()
 export class BoardingController {
   constructor(private readonly service: BoardingService) {}
 

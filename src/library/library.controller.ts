@@ -1,5 +1,6 @@
 import { RolesGuard } from '../auth/roles.guard';
 import { Controller, Get, Post, Put, Body, Param, UseGuards, Request, ParseUUIDPipe } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { LibraryService } from './library.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
@@ -7,6 +8,7 @@ import { CreateBookDto, CreateCirculationDto } from './library.dto';
 
 @Controller('library')
 @UseGuards(JwtAuthGuard, RolesGuard)
+@SkipThrottle()
 export class LibraryController {
   constructor(private readonly service: LibraryService) {}
 
