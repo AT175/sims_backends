@@ -47,6 +47,9 @@ export class User {
   @Column({ type: 'timestamp', nullable: true })
   lockedUntil: Date | null;
 
+  @Column({ type: 'boolean', default: false })
+  mustChangePassword: boolean;
+
   @CreateDateColumn()
   createdAt: Date;
 

@@ -169,6 +169,7 @@ export class AuthService {
         displayName: user.displayName,
         roles: user.roles,
         activeRole: user.activeRole,
+        mustChangePassword: user.mustChangePassword,
       },
     };
   }
@@ -217,6 +218,7 @@ export class AuthService {
     }
 
     user.passwordHash = await bcrypt.hash(newPassword, 10);
+    user.mustChangePassword = false;
     await this.userRepo.save(user);
     await this.revokeAllUserRefreshTokens(user.id);
     await this.auditService.log({
@@ -508,7 +510,7 @@ export class AuthService {
 
   async createUser(data: {
     username: string;
-    password: string;
+    password?: string;
     displayName: string;
     email?: string;
     roles: string[];
@@ -520,7 +522,30 @@ export class AuthService {
       throw new BadRequestException('Username already exists');
     }
 
-    if (!data.password || data.password.length < 6) {
+    // Generate a unique random password if none provided
+    let generatedPassword: string | undefined;
+    let password = data.password;
+    if (!password) {
+      const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+      const lower = 'abcdefghijkmnpqrstuvwxyz';
+      const digits = '23456789';
+      const all = upper + lower + digits;
+      const bytes = crypto.randomBytes(16);
+      // Guarantee at least one of each category
+      let pwd = '';
+      pwd += upper[bytes[0] % upper.length];
+      pwd += lower[bytes[1] % lower.length];
+      pwd += digits[bytes[2] % digits.length];
+      for (let i = 3; i < 12; i++) {
+        pwd += all[bytes[i] % all.length];
+      }
+      // Shuffle the characters
+      pwd = pwd.split('').sort(() => Math.random() - 0.5).join('');
+      generatedPassword = pwd;
+      password = pwd;
+    }
+
+    if (password.length < 6) {
       throw new BadRequestException('Password must be at least 6 characters');
     }
 
@@ -530,7 +555,8 @@ export class AuthService {
       throw new BadRequestException(`Tenant "${data.tenantId}" does not exist`);
     }
 
-    const passwordHash = await bcrypt.hash(data.password, 10);
+    const passwordHash = await bcrypt.hash(password, 10);
+    const mustChangePassword = !data.password;
     const user = this.userRepo.create({
       username: data.username,
       passwordHash,
@@ -540,6 +566,7 @@ export class AuthService {
       schoolLogoUrl: null,
       roles: data.roles,
       activeRole: data.activeRole || data.roles[0] || 'staff',
+      mustChangePassword,
     });
     await this.userRepo.save(user);
 
@@ -548,7 +575,7 @@ export class AuthService {
       username: user.username,
       action: 'user_created',
       resource: 'users',
-      details: `Roles: ${data.roles.join(', ')}`,
+      details: `Roles: ${data.roles.join(', ')}${mustChangePassword ? ' (default password)' : ''}`,
       success: true,
     });
 
@@ -559,22 +586,45 @@ export class AuthService {
       roles: user.roles,
       activeRole: user.activeRole,
       tenantId: user.tenantId,
+      mustChangePassword,
+      defaultPassword: generatedPassword,
     };
   }
 
-  async adminResetPassword(userId: string, newPassword: string) {
+  async adminResetPassword(userId: string, newPassword?: string) {
     const user = await this.userRepo.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    if (!newPassword || newPassword.length < 6) {
+    let generatedPassword: string | undefined;
+    let password = newPassword;
+    if (!password) {
+      const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+      const lower = 'abcdefghijkmnpqrstuvwxyz';
+      const digits = '23456789';
+      const all = upper + lower + digits;
+      const bytes = crypto.randomBytes(16);
+      let pwd = '';
+      pwd += upper[bytes[0] % upper.length];
+      pwd += lower[bytes[1] % lower.length];
+      pwd += digits[bytes[2] % digits.length];
+      for (let i = 3; i < 12; i++) {
+        pwd += all[bytes[i] % all.length];
+      }
+      pwd = pwd.split('').sort(() => Math.random() - 0.5).join('');
+      generatedPassword = pwd;
+      password = pwd;
+    }
+
+    if (password.length < 6) {
       throw new BadRequestException('Password must be at least 6 characters');
     }
 
-    user.passwordHash = await bcrypt.hash(newPassword, 10);
+    user.passwordHash = await bcrypt.hash(password, 10);
     user.failedLoginAttempts = 0;
     user.lockedUntil = null;
+    user.mustChangePassword = true;
     await this.userRepo.save(user);
     await this.revokeAllUserRefreshTokens(user.id);
 
@@ -586,7 +636,7 @@ export class AuthService {
       success: true,
     });
 
-    return { message: 'Password reset successfully' };
+    return { message: 'Password reset successfully', generatedPassword };
   }
 
   async listUsers(tenantId?: string) {

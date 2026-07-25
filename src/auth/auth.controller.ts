@@ -70,9 +70,10 @@ class CreateUserDto {
   @MinLength(3)
   username: string;
 
+  @IsOptional()
   @IsString()
   @MinLength(6)
-  password: string;
+  password?: string;
 
   @IsString()
   displayName: string;
@@ -94,9 +95,10 @@ class CreateUserDto {
 }
 
 class AdminResetPasswordDto {
+  @IsOptional()
   @IsString()
   @MinLength(6)
-  newPassword: string;
+  newPassword?: string;
 }
 
 class UpdateUserDto {
