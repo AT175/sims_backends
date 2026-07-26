@@ -54,4 +54,59 @@ export class AcademicService {
     const entry = this.attendanceRepo.create({ ...dto, tenantId });
     return this.attendanceRepo.save(entry);
   }
+
+  // Exams (stub - returns empty until entity is created)
+  async getExams(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // HOD Approvals (stub - returns empty until entity is created)
+  async getHODApprovals(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // Report Cards (stub - returns empty until entity is created)
+  async getReportCards(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // Transcripts (stub - returns empty until entity is created)
+  async getTranscripts(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // SPIPs (stub - returns empty until entity is created)
+  async getSPIPs(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // Curriculum (stub - returns empty until entity is created)
+  async getCurriculum(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // Calendar (stub - returns empty until entity is created)
+  async getCalendar(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // Terms (stub - returns empty until entity is created)
+  async getTerms(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // Subject Performance (stub - returns empty until entity is created)
+  async getSubjectPerformance(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // Teacher Activity (stub - returns empty until entity is created)
+  async getTeacherActivity(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  // Admission Insights (stub - returns empty until entity is created)
+  async getAdmissionInsights(tenantId: string): Promise<any[]> {
+    return [];
+  }
 }

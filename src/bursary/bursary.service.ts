@@ -75,4 +75,64 @@ export class BursaryService {
     const totalOutstanding = records.reduce((sum, r) => sum + Number(r.balance), 0);
     return { totalBilled, totalCollected, totalOutstanding, recordCount: records.length };
   }
+
+  async getPayroll(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getExpenditure(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async createExpenditure(dto: any, tenantId: string): Promise<any> {
+    return { ...dto, tenantId };
+  }
+
+  async getBudgetItems(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getBudgetSubmissions(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getInvoices(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async createReceipt(dto: any, tenantId: string): Promise<any> {
+    return { ...dto, tenantId };
+  }
+
+  async getProcurement(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getPettyCash(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getCashTransactions(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getStudentAccounts(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getImprest(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getFeeding(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getBoardingSupplies(tenantId: string): Promise<any[]> {
+    return [];
+  }
+
+  async getReturns(tenantId: string): Promise<any[]> {
+    return [];
+  }
 }

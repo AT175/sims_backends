@@ -15,6 +15,9 @@ export class CounsellingController {
   @Get('cases')
   async getCases(@Request() req: any) { return this.service.getCases(req.user.tenantId); }
 
+  @Get('appointments')
+  async getAppointments(@Request() req: any) { return this.service.getAppointments(req.user.tenantId); }
+
   @Post('cases')
   @Roles('headmaster', 'counselling', 'system_admin')
   async createCase(@Body() data: CreateCounsellingCaseDto, @Request() req: any) { return this.service.createCase(data, req.user.tenantId); }

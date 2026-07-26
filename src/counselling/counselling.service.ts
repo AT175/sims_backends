@@ -22,4 +22,7 @@ export class CounsellingService {
     c.status = status;
     return this.caseRepo.save(c);
   }
+  async getAppointments(tenantId: string): Promise<any[]> {
+    return [];
+  }
 }

@@ -26,6 +26,19 @@ import { RequisitionModule } from './requisition/requisition.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { TeacherModule } from './teacher/teacher.module';
 import { StudentModule } from './student/student.module';
+import { AdminModule } from './admin/admin.module';
+import { ExeatModule } from './exeat/exeat.module';
+import { HeadmasterModule } from './headmaster/headmaster.module';
+import { PlcModule } from './plc/plc.module';
+import { RegistryModule } from './registry/registry.module';
+import { AcademicBoardModule } from './academic-board/academic-board.module';
+import { DiningHallModule } from './dining-hall/dining-hall.module';
+import { ExamCommitteeModule } from './exam-committee/exam-committee.module';
+import { GoverningBoardModule } from './governing-board/governing-board.module';
+import { SafeSpaceModule } from './safe-space/safe-space.module';
+import { SecretaryModule } from './secretary/secretary.module';
+import { SrcModule } from './src/src.module';
+import { WelfareModule } from './welfare/welfare.module';
 import { RolesGuard } from './auth/roles.guard';
 import { Reflector } from '@nestjs/core';
 
@@ -84,6 +97,19 @@ import { Reflector } from '@nestjs/core';
     TenantsModule,
     TeacherModule,
     StudentModule,
+    AdminModule,
+    ExeatModule,
+    HeadmasterModule,
+    PlcModule,
+    RegistryModule,
+    AcademicBoardModule,
+    DiningHallModule,
+    ExamCommitteeModule,
+    GoverningBoardModule,
+    SafeSpaceModule,
+    SecretaryModule,
+    SrcModule,
+    WelfareModule,
   ],
   providers: [
     {
