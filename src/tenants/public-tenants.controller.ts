@@ -5,6 +5,11 @@ import { TenantsService } from './tenants.service';
 export class PublicTenantsController {
   constructor(private readonly tenantsService: TenantsService) {}
 
+  @Get()
+  async getAllPublicTenants() {
+    return this.tenantsService.getAllPublicBranding();
+  }
+
   @Get(':tenantKey')
   async getPublicBranding(@Param('tenantKey') tenantKey: string) {
     return this.tenantsService.getPublicBranding(tenantKey);

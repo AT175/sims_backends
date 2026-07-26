@@ -194,6 +194,22 @@ class UpdateTenantDto {
   @IsOptional()
   @IsString()
   customDomain?: string;
+
+  @IsOptional()
+  @IsArray()
+  programmes?: { name: string; description: string; icon: string }[];
+
+  @IsOptional()
+  @IsArray()
+  staffProfiles?: { name: string; title: string; photoUrl: string | null; bio: string | null }[];
+
+  @IsOptional()
+  @IsArray()
+  upcomingEvents?: { title: string; date: string; description: string; type: string }[];
+
+  @IsOptional()
+  @IsArray()
+  testimonials?: { author: string; role: string; content: string; rating: number }[];
 }
 
 @Controller('tenants')

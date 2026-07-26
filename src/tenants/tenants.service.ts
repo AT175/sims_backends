@@ -96,10 +96,32 @@ export class TenantsService {
     newsItems: { title: string; body: string; date: string }[];
     galleryImages: string[];
     customDomain: string;
+    programmes: { name: string; description: string; icon: string }[];
+    staffProfiles: { name: string; title: string; photoUrl: string | null; bio: string | null }[];
+    upcomingEvents: { title: string; date: string; description: string; type: string }[];
+    testimonials: { author: string; role: string; content: string; rating: number }[];
   }>): Promise<Tenant> {
     const tenant = await this.findOne(id);
     Object.assign(tenant, data);
     return this.tenantRepo.save(tenant);
+  }
+
+  async getAllPublicBranding() {
+    const tenants = await this.tenantRepo.find({
+      where: { active: true },
+      order: { schoolName: 'ASC' },
+    });
+    return tenants.map((t) => ({
+      tenantKey: t.tenantKey,
+      schoolName: t.schoolName,
+      schoolCode: t.schoolCode,
+      logoUrl: t.logoUrl,
+      motto: t.motto,
+      primaryColor: t.primaryColor || '#0F4C75',
+      region: t.region,
+      district: t.district,
+      bannerImage: t.bannerImage,
+    }));
   }
 
   async getPublicBranding(tenantKey: string) {
