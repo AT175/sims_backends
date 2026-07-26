@@ -131,6 +131,11 @@ export class TenantsService {
       twitterUrl: tenant.twitterUrl,
       newsItems: tenant.newsItems || [],
       galleryImages: tenant.galleryImages || [],
+      programmes: tenant.programmes || [],
+      staffProfiles: tenant.staffProfiles || [],
+      upcomingEvents: tenant.upcomingEvents || [],
+      testimonials: tenant.testimonials || [],
+      updatedAt: tenant.updatedAt,
     };
   }
 

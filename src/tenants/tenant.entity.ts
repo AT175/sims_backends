@@ -111,6 +111,18 @@ export class Tenant {
   @Column({ type: 'varchar', nullable: true })
   customDomain: string | null;
 
+  @Column({ type: 'simple-json', nullable: true })
+  programmes: { name: string; description: string; icon: string }[] | null;
+
+  @Column({ type: 'simple-json', nullable: true })
+  staffProfiles: { name: string; title: string; photoUrl: string | null; bio: string | null }[] | null;
+
+  @Column({ type: 'simple-json', nullable: true })
+  upcomingEvents: { title: string; date: string; description: string; type: string }[] | null;
+
+  @Column({ type: 'simple-json', nullable: true })
+  testimonials: { author: string; role: string; content: string; rating: number }[] | null;
+
   @CreateDateColumn()
   createdAt: Date;
 
