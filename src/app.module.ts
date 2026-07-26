@@ -25,6 +25,7 @@ import { KitchenModule } from './kitchen/kitchen.module';
 import { RequisitionModule } from './requisition/requisition.module';
 import { TenantsModule } from './tenants/tenants.module';
 import { TeacherModule } from './teacher/teacher.module';
+import { StudentModule } from './student/student.module';
 import { RolesGuard } from './auth/roles.guard';
 import { Reflector } from '@nestjs/core';
 
@@ -82,6 +83,7 @@ import { Reflector } from '@nestjs/core';
     RequisitionModule,
     TenantsModule,
     TeacherModule,
+    StudentModule,
   ],
   providers: [
     {
