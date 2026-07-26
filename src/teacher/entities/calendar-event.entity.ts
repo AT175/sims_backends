@@ -7,10 +7,10 @@ export class CalendarEventEntity {
 
   @Column() title: string;
   @Column({ type: 'date' }) date: string;
-  @Column({ nullable: true }) time: string | null;
+  @Column({ type: 'varchar', nullable: true }) time: string | null;
   @Column({ default: 'Lesson' }) type: string;
-  @Column({ nullable: true }) subject: string | null;
-  @Column({ nullable: true }) classForm: string | null;
+  @Column({ type: 'varchar', nullable: true }) subject: string | null;
+  @Column({ type: 'varchar', nullable: true }) classForm: string | null;
   @Column({ type: 'text', nullable: true }) notes: string | null;
 
   @Index() @Column() tenantId: string;

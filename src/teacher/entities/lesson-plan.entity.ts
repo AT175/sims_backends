@@ -19,7 +19,7 @@ export class LessonPlanEntity {
   @Column({ type: 'text', nullable: true }) reflection: string | null;
   @Column({ type: 'text', nullable: true }) fileUrl: string | null;
   @Column({ type: 'text', nullable: true }) fileName: string | null;
-  @Column({ nullable: true }) teacherId: string | null;
+  @Column({ type: 'varchar', nullable: true }) teacherId: string | null;
 
   @Index() @Column() tenantId: string;
   @CreateDateColumn() createdAt: Date;

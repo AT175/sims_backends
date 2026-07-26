@@ -15,7 +15,7 @@ export class AssignmentEntity {
   @Column({ type: 'int', default: 20 }) maxScore: number;
   @Column({ default: 'Draft' }) status: string;
   @Column({ default: '' }) createdBy: string;
-  @Column({ nullable: true }) teacherId: string | null;
+  @Column({ type: 'varchar', nullable: true }) teacherId: string | null;
   @Column({ type: 'json', default: [] }) submissions: any[];
 
   @Index() @Column() tenantId: string;
