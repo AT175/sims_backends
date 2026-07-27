@@ -115,6 +115,20 @@ class UpdateUserDto {
   roles?: string[];
 }
 
+class ParentSetupDto {
+  @IsString()
+  @MinLength(3)
+  username: string;
+
+  @IsString()
+  @MinLength(6)
+  password: string;
+
+  @IsOptional()
+  @IsString()
+  displayName?: string;
+}
+
 @Controller('auth')
 @SkipThrottle({ default: false })
 export class AuthController {
@@ -250,5 +264,12 @@ export class AuthController {
   @SkipThrottle()
   async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
     return this.authService.updateUser(id, dto);
+  }
+
+  @Post('parent-setup')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @SkipThrottle()
+  async setupParentAccount(@Request() req: any, @Body() dto: ParentSetupDto) {
+    return this.authService.setupParentAccount(req.user.id, dto);
   }
 }

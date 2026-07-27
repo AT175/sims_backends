@@ -570,6 +570,13 @@ export class AuthService {
     });
     await this.userRepo.save(user);
 
+    // If user has 'student' role, also add 'parent' role and create a linked Student record
+    if (data.roles.includes('student') && !data.roles.includes('parent')) {
+      data.roles.push('parent');
+      user.roles = data.roles;
+      await this.userRepo.save(user);
+    }
+
     // If user has 'student' role, create a linked Student record
     if (data.roles.includes('student')) {
       const nameParts = data.displayName.trim().split(/\s+/);
@@ -743,6 +750,81 @@ export class AuthService {
       roles: user.roles,
       activeRole: user.activeRole,
       tenantId: user.tenantId,
+    };
+  }
+
+  async setupParentAccount(currentUserId: string, data: { username: string; password: string; displayName?: string }) {
+    const currentUser = await this.userRepo.findOne({ where: { id: currentUserId } });
+    if (!currentUser) {
+      throw new NotFoundException('User not found');
+    }
+    if (!currentUser.roles.includes('parent')) {
+      throw new BadRequestException('Your account does not have the parent role. Only shared student/parent accounts can set up a separate parent login.');
+    }
+
+    // Check username is not taken
+    const existing = await this.userRepo.findOne({ where: { username: data.username } });
+    if (existing) {
+      throw new BadRequestException('Username already taken. Please choose a different username.');
+    }
+
+    // Find the student linked to this user
+    let student = await this.studentRepo.findOne({ where: { userId: currentUserId, tenantId: currentUser.tenantId } });
+    if (!student) {
+      student = await this.studentRepo.findOne({ where: { id: currentUserId, tenantId: currentUser.tenantId } });
+    }
+    if (!student) {
+      throw new NotFoundException('Student record not found for this account.');
+    }
+
+    // If student already has a separate parent account, reject
+    if (student.parentUserId) {
+      throw new BadRequestException('A separate parent account has already been set up for this student.');
+    }
+
+    // Create the new parent User
+    const passwordHash = await bcrypt.hash(data.password, 10);
+    const parentUser = this.userRepo.create({
+      username: data.username,
+      passwordHash,
+      displayName: data.displayName || `Parent of ${student.firstName} ${student.lastName}`,
+      tenantId: currentUser.tenantId,
+      schoolName: null,
+      schoolLogoUrl: null,
+      roles: ['parent'],
+      activeRole: 'parent',
+      mustChangePassword: false,
+    });
+    await this.userRepo.save(parentUser);
+
+    // Link parent to student
+    student.parentUserId = parentUser.id;
+    await this.studentRepo.save(student);
+
+    // Remove 'parent' role from the student's original user account
+    currentUser.roles = currentUser.roles.filter((r) => r !== 'parent');
+    if (currentUser.activeRole === 'parent') {
+      currentUser.activeRole = currentUser.roles[0] || 'student';
+    }
+    await this.userRepo.save(currentUser);
+
+    await this.auditService.log({
+      userId: parentUser.id,
+      username: parentUser.username,
+      action: 'parent_account_setup',
+      resource: 'users',
+      details: `Parent account created for student ${student.admissionNumber}`,
+      success: true,
+    });
+
+    return {
+      id: parentUser.id,
+      username: parentUser.username,
+      displayName: parentUser.displayName,
+      roles: parentUser.roles,
+      activeRole: parentUser.activeRole,
+      tenantId: parentUser.tenantId,
+      message: 'Parent account created successfully. You can now log in with your new username and password.',
     };
   }
 }

@@ -20,6 +20,9 @@ export class Student {
   @Column({ type: 'varchar', nullable: true })
   userId: string | null;
 
+  @Column({ type: 'varchar', nullable: true })
+  parentUserId: string | null;
+
   @Column()
   firstName: string;
 

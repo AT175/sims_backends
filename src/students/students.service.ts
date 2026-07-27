@@ -74,7 +74,7 @@ export class StudentsService {
       tenantId,
       schoolName: null,
       schoolLogoUrl: null,
-      roles: ['student'],
+      roles: ['student', 'parent'],
       activeRole: 'student',
       mustChangePassword: true,
     });
@@ -85,6 +85,26 @@ export class StudentsService {
     await this.repo.save(saved);
 
     return { student: saved, credentials: { username, password } };
+  }
+
+  async getWardForParent(parentUserId: string, tenantId: string): Promise<any> {
+    const student = await this.repo.findOne({ where: { parentUserId, tenantId } });
+    if (!student) {
+      throw new NotFoundException('No ward found linked to your parent account.');
+    }
+    return {
+      id: student.id,
+      admissionNumber: student.admissionNumber,
+      firstName: student.firstName,
+      lastName: student.lastName,
+      name: `${student.firstName} ${student.lastName}`,
+      classSectionId: student.classSectionId,
+      houseId: student.houseId,
+      gender: student.gender,
+      status: student.status,
+      guardianName: student.guardianName,
+      guardianPhone: student.guardianPhone,
+    };
   }
 
   async update(id: string, dto: UpdateStudentDto, tenantId: string): Promise<Student> {

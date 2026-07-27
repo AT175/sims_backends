@@ -38,6 +38,11 @@ export class StudentsController {
     return this.service.getStudentVoterId(req.user.id, req.user.tenantId);
   }
 
+  @Get('ward')
+  async getWard(@Request() req: any) {
+    return this.service.getWardForParent(req.user.id, req.user.tenantId);
+  }
+
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string, @Request() req: any) {
     return this.service.findOne(id, req.user.tenantId);
