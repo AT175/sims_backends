@@ -52,3 +52,19 @@ export class CreateStudentAttendanceDto {
   @IsString() subject: string;
   @IsString() status: string;
 }
+
+export class RequestExeatDto {
+  @IsString() reason: string;
+  @IsOptional() @IsString() reasonDetail?: string;
+  @IsOptional() @IsString() destination?: string;
+  @IsString() departureDate: string;
+  @IsString() returnDate: string;
+  @IsOptional() @IsString() transportMode?: string;
+}
+
+export class CreateStudentMessageDto {
+  @IsString() recipientType: string;
+  @IsOptional() @IsString() recipientName?: string;
+  @IsString() subject: string;
+  @IsString() body: string;
+}

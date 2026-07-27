@@ -50,4 +50,48 @@ export class StudentController {
 
   @Get('library')
   async getLibrary(@Request() r: any) { return this.svc.getLibrary(r.user.userId, r.user.tenantId); }
+
+  // ── Exeat Requests ──
+  @Get('exeats')
+  async getMyExeats(@Request() r: any) { return this.svc.getMyExeats(r.user.userId, r.user.tenantId); }
+
+  @Post('exeats')
+  async requestExeat(@Body() d: dto.RequestExeatDto, @Request() r: any) {
+    return this.svc.requestExeat(r.user.userId, r.user.tenantId, d);
+  }
+
+  // ── Teacher Content ──
+  @Get('announcements')
+  async getAnnouncements(@Request() r: any) { return this.svc.getTeacherAnnouncements(r.user.userId, r.user.tenantId); }
+
+  @Get('teacher-materials')
+  async getTeacherMaterials(@Request() r: any) { return this.svc.getTeacherMaterials(r.user.userId, r.user.tenantId); }
+
+  @Get('live-sessions')
+  async getLiveSessions(@Request() r: any) { return this.svc.getLiveSessions(r.user.userId, r.user.tenantId); }
+
+  @Get('av-recordings')
+  async getAVRecordings(@Request() r: any) { return this.svc.getAVRecordings(r.user.userId, r.user.tenantId); }
+
+  @Get('shared-resources')
+  async getSharedResources(@Request() r: any) { return this.svc.getSharedResources(r.user.userId, r.user.tenantId); }
+
+  @Get('quizzes')
+  async getQuizzes(@Request() r: any) { return this.svc.getQuizzes(r.user.userId, r.user.tenantId); }
+
+  // ── House Info ──
+  @Get('house/roll-calls')
+  async getHouseRollCalls(@Request() r: any) { return this.svc.getHouseRollCalls(r.user.userId, r.user.tenantId); }
+
+  @Get('house/discipline')
+  async getHouseDiscipline(@Request() r: any) { return this.svc.getHouseDiscipline(r.user.userId, r.user.tenantId); }
+
+  // ── Messages ──
+  @Get('messages')
+  async getMessages(@Request() r: any) { return this.svc.getMessages(r.user.userId, r.user.tenantId); }
+
+  @Post('messages')
+  async createMessage(@Body() d: dto.CreateStudentMessageDto, @Request() r: any) {
+    return this.svc.createMessage(r.user.userId, r.user.tenantId, d);
+  }
 }
