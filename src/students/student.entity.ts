@@ -16,6 +16,10 @@ export class Student {
   @Column({ unique: true })
   admissionNumber: string;
 
+  @Index()
+  @Column({ type: 'varchar', nullable: true })
+  userId: string | null;
+
   @Column()
   firstName: string;
 

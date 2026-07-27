@@ -45,8 +45,11 @@ export class StudentService {
   ) {}
 
   private async getStudent(userId: string, tenantId: string): Promise<Student> {
-    const student = await this.studentRepo.findOne({ where: { id: userId, tenantId } });
-    if (!student) throw new NotFoundException('Student not found');
+    let student = await this.studentRepo.findOne({ where: { userId, tenantId } });
+    if (!student) {
+      student = await this.studentRepo.findOne({ where: { id: userId, tenantId } });
+    }
+    if (!student) throw new NotFoundException('Student profile not found. Please contact administration to set up your student record.');
     return student;
   }
 

@@ -570,6 +570,31 @@ export class AuthService {
     });
     await this.userRepo.save(user);
 
+    // If user has 'student' role, create a linked Student record
+    if (data.roles.includes('student')) {
+      const nameParts = data.displayName.trim().split(/\s+/);
+      const firstName = nameParts[0] || data.username;
+      const lastName = nameParts.slice(1).join(' ') || 'Student';
+      const admissionNumber = `USR-${data.username.toUpperCase()}`;
+      const student = this.studentRepo.create({
+        userId: user.id,
+        admissionNumber,
+        firstName,
+        lastName,
+        dateOfBirth: '2000-01-01',
+        gender: 'male',
+        classSectionId: 'unassigned',
+        houseId: null,
+        guardianName: 'N/A',
+        guardianPhone: '0000000000',
+        guardianAddress: 'N/A',
+        admissionDate: new Date().toISOString().slice(0, 10),
+        status: 'active',
+        tenantId: data.tenantId,
+      });
+      await this.studentRepo.save(student);
+    }
+
     await this.auditService.log({
       userId: user.id,
       username: user.username,
