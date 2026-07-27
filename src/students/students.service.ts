@@ -1,16 +1,24 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
+import { Injectable, NotFoundException, ForbiddenException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Student } from './student.entity';
+import { User } from '../auth/user.entity';
 import { CreateStudentDto, UpdateStudentDto } from './student.dto';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
+
+export interface CreatedStudentResult {
+  student: Student;
+  credentials?: { username: string; password: string };
+}
 
 @Injectable()
 export class StudentsService {
   constructor(
     @InjectRepository(Student)
     private readonly repo: Repository<Student>,
+    @InjectRepository(User)
+    private readonly userRepo: Repository<User>,
   ) {}
 
   async findAll(tenantId: string): Promise<Student[]> {
@@ -28,9 +36,55 @@ export class StudentsService {
     return student;
   }
 
-  async create(dto: CreateStudentDto, tenantId: string): Promise<Student> {
+  async create(dto: CreateStudentDto, tenantId: string): Promise<CreatedStudentResult> {
     const student = this.repo.create({ ...dto, tenantId });
-    return this.repo.save(student);
+    const saved = await this.repo.save(student);
+
+    // Generate a username from admission number (e.g. ADM2024001 -> adm2024001)
+    const baseUsername = dto.admissionNumber.toLowerCase().replace(/\s+/g, '');
+    let username = baseUsername;
+    let suffix = 0;
+    while (await this.userRepo.findOne({ where: { username } })) {
+      suffix++;
+      username = `${baseUsername}${suffix}`;
+    }
+
+    // Generate a random password
+    const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+    const lower = 'abcdefghijkmnpqrstuvwxyz';
+    const digits = '23456789';
+    const all = upper + lower + digits;
+    const bytes = crypto.randomBytes(16);
+    let password = '';
+    password += upper[bytes[0] % upper.length];
+    password += lower[bytes[1] % lower.length];
+    password += digits[bytes[2] % digits.length];
+    for (let i = 3; i < 12; i++) {
+      password += all[bytes[i] % all.length];
+    }
+    password = password.split('').sort(() => Math.random() - 0.5).join('');
+
+    const passwordHash = await bcrypt.hash(password, 10);
+    const displayName = `${dto.firstName} ${dto.lastName}`;
+
+    const user = this.userRepo.create({
+      username,
+      passwordHash,
+      displayName,
+      tenantId,
+      schoolName: null,
+      schoolLogoUrl: null,
+      roles: ['student'],
+      activeRole: 'student',
+      mustChangePassword: true,
+    });
+    await this.userRepo.save(user);
+
+    // Link student to user
+    saved.userId = user.id;
+    await this.repo.save(saved);
+
+    return { student: saved, credentials: { username, password } };
   }
 
   async update(id: string, dto: UpdateStudentDto, tenantId: string): Promise<Student> {
@@ -72,7 +126,10 @@ export class StudentsService {
   }
 
   async getStudentVoterId(userId: string, tenantId: string): Promise<{ voterId: string | null; hasVoted: boolean; isCandidate: boolean; candidateInfo?: any }> {
-    const student = await this.repo.findOne({ where: { id: userId, tenantId } });
+    let student = await this.repo.findOne({ where: { userId, tenantId } });
+    if (!student) {
+      student = await this.repo.findOne({ where: { id: userId, tenantId } });
+    }
     if (!student) {
       throw new NotFoundException('Student not found');
     }

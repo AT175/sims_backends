@@ -35,7 +35,7 @@ export class StudentsController {
 
   @Get('my-voter-id')
   async getMyVoterId(@Request() req: any) {
-    return this.service.getStudentVoterId(req.user.userId, req.user.tenantId);
+    return this.service.getStudentVoterId(req.user.id, req.user.tenantId);
   }
 
   @Get(':id')
