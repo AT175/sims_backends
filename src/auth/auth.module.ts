@@ -11,6 +11,7 @@ import { Student } from '../students/student.entity';
 import { RefreshToken } from './refresh-token.entity';
 import { VoterMasterKey } from './voter-master-key.entity';
 import { TenantsModule } from '../tenants/tenants.module';
+import { SubscriptionModule } from '../subscription/subscription.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { TenantsModule } from '../tenants/tenants.module';
       },
     }),
     TenantsModule,
+    SubscriptionModule,
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],

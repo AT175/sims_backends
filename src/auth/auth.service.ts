@@ -10,6 +10,7 @@ import { RefreshToken } from './refresh-token.entity';
 import { VoterMasterKey } from './voter-master-key.entity';
 import { AuditService } from '../audit/audit.service';
 import { TenantsService } from '../tenants/tenants.service';
+import { SubscriptionService } from '../subscription/subscription.service';
 
 @Injectable()
 export class AuthService {
@@ -25,6 +26,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly auditService: AuditService,
     private readonly tenantsService: TenantsService,
+    private readonly subscriptionService: SubscriptionService,
   ) {}
 
   async validateUser(username: string, password: string): Promise<User> {
@@ -800,6 +802,14 @@ export class AuthService {
     // Link parent to student
     student.parentUserId = parentUser.id;
     await this.studentRepo.save(student);
+
+    // Create trial subscription for the new parent
+    await this.subscriptionService.createTrial(
+      parentUser.id,
+      parentUser.tenantId,
+      `${student.firstName} ${student.lastName}`,
+      student.admissionNumber,
+    );
 
     // Remove 'parent' role from the student's original user account
     currentUser.roles = currentUser.roles.filter((r) => r !== 'parent');

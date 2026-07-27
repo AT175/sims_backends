@@ -39,6 +39,7 @@ import { SafeSpaceModule } from './safe-space/safe-space.module';
 import { SecretaryModule } from './secretary/secretary.module';
 import { SrcModule } from './src/src.module';
 import { WelfareModule } from './welfare/welfare.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 import { RolesGuard } from './auth/roles.guard';
 import { Reflector } from '@nestjs/core';
 
@@ -110,6 +111,7 @@ import { Reflector } from '@nestjs/core';
     SecretaryModule,
     SrcModule,
     WelfareModule,
+    SubscriptionModule,
   ],
   providers: [
     {
