@@ -36,6 +36,18 @@ export class AdmissionApplication {
   @Column({ default: 'received' })
   status: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  parentUserId: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  generatedUsername: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  generatedPassword: string | null;
+
+  @Column({ type: 'boolean', default: false })
+  isDirectApplication: boolean;
+
   @Index()
   @Column()
   tenantId: string;

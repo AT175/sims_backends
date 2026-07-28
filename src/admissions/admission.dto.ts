@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEmail, IsIn, MaxLength, Matches } from 'class-validator';
+import { IsString, IsOptional, IsEmail, IsIn, MaxLength, Matches, IsBoolean } from 'class-validator';
 
 export class SubmitAdmissionDto {
   @IsString()
@@ -26,6 +26,10 @@ export class SubmitAdmissionDto {
   @IsString()
   @MaxLength(50)
   programme?: string;
+
+  @IsOptional()
+  @IsBoolean()
+  isDirectApplication?: boolean;
 }
 
 export class CheckStatusDto {
@@ -34,6 +38,14 @@ export class CheckStatusDto {
 
   @IsString()
   csspsPlacementRef: string;
+}
+
+export class CheckStatusByPhoneDto {
+  @IsString()
+  applicantName: string;
+
+  @IsString()
+  parentPhone: string;
 }
 
 export class UpdateAdmissionStatusDto {

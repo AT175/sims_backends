@@ -12,7 +12,7 @@ import {
 } from '@nestjs/common';
 import { Throttle, SkipThrottle } from '@nestjs/throttler';
 import { AdmissionsService } from './admissions.service';
-import { SubmitAdmissionDto, UpdateAdmissionStatusDto, CheckStatusDto } from './admission.dto';
+import { SubmitAdmissionDto, UpdateAdmissionStatusDto, CheckStatusDto, CheckStatusByPhoneDto } from './admission.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Roles } from '../auth/roles.decorator';
 
@@ -34,6 +34,12 @@ export class AdmissionsController {
   @Throttle({ auth: { ttl: 60000, limit: 5 } })
   async checkStatus(@Body() dto: CheckStatusDto) {
     return this.service.checkStatus(dto.applicantName, dto.csspsPlacementRef);
+  }
+
+  @Post('check-status-by-phone')
+  @Throttle({ auth: { ttl: 60000, limit: 5 } })
+  async checkStatusByPhone(@Body() dto: CheckStatusByPhoneDto) {
+    return this.service.checkStatusByPhone(dto.applicantName, dto.parentPhone);
   }
 
   @Get()
