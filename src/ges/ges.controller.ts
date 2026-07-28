@@ -8,6 +8,7 @@ import {
   Param,
   Query,
   UseGuards,
+  NotFoundException,
 } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
 import { GesService } from './ges.service';
@@ -31,7 +32,7 @@ export class GesController {
   // ── Office endpoints ──
 
   @Get('offices')
-  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit', 'headmaster')
+  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit')
   async findAllOffices(
     @Query('level') level?: string,
     @Query('parentId') parentId?: string,
@@ -40,13 +41,13 @@ export class GesController {
   }
 
   @Get('offices/tree')
-  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit', 'headmaster')
+  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit')
   async getOfficeTree() {
     return this.gesService.getOfficeTree();
   }
 
   @Get('offices/:id')
-  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit', 'headmaster')
+  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit')
   async findOfficeById(@Param('id') id: string) {
     return this.gesService.findOfficeById(id);
   }
@@ -72,7 +73,7 @@ export class GesController {
   // ── Report endpoints ──
 
   @Get('reports')
-  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit', 'headmaster')
+  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit')
   async findReports(
     @Query('tenantId') tenantId?: string,
     @Query('officeId') officeId?: string,
@@ -84,19 +85,19 @@ export class GesController {
   }
 
   @Get('reports/:id')
-  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit', 'headmaster')
+  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit')
   async findReportById(@Param('id') id: string) {
     return this.gesService.findReportById(id);
   }
 
   @Post('reports')
-  @Roles('system_admin', 'headmaster', 'ges_circuit')
+  @Roles('system_admin', 'ges_circuit')
   async createReport(@Body() dto: CreateGesReportDto, @Query('tenantId') tenantId: string) {
     return this.gesService.createReport(dto, tenantId);
   }
 
   @Post('reports/:id/submit')
-  @Roles('system_admin', 'headmaster', 'ges_circuit')
+  @Roles('system_admin', 'ges_circuit')
   async submitReport(@Param('id') id: string) {
     return this.gesService.submitReport(id);
   }
@@ -132,6 +133,14 @@ export class GesController {
   }
 
   // ── Stats ──
+
+  @Get('my-office/:tenantKey')
+  @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit')
+  async findMyOffice(@Param('tenantKey') tenantKey: string) {
+    const office = await this.gesService.findOfficeByTenantKey(tenantKey);
+    if (!office) throw new NotFoundException('GES office not found for this tenant');
+    return office;
+  }
 
   @Get('stats/:officeId')
   @Roles('system_admin', 'ges_national', 'ges_regional', 'ges_district', 'ges_circuit')

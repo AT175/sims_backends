@@ -59,7 +59,33 @@ export class GesService {
       headName: dto.headName || null,
       headTitle: dto.headTitle || null,
     });
-    return this.officeRepo.save(office);
+    const saved = await this.officeRepo.save(office);
+
+    // Create a tenant for this GES office so it can have users
+    const existingTenant = await this.tenantRepo.findOne({ where: { tenantKey: dto.officeKey } });
+    if (!existingTenant) {
+      const gesTenant = this.tenantRepo.create({
+        tenantKey: dto.officeKey,
+        schoolName: dto.name,
+        schoolCode: dto.gesCode || null,
+        schoolLevel: 'shs',
+        region: dto.region || null,
+        district: dto.district || null,
+        address: dto.address || null,
+        phone: dto.phone || null,
+        email: dto.email || null,
+        isGesOffice: true,
+        active: true,
+        enabledModules: [],
+        disabledRoles: [],
+        maxStudents: 0,
+        maxStaff: 0,
+        subscriptionPlan: 'Premium',
+      } as any);
+      await this.tenantRepo.save(gesTenant);
+    }
+
+    return saved;
   }
 
   async findAllOffices(level?: string, parentId?: string): Promise<GesOffice[]> {
@@ -77,6 +103,11 @@ export class GesService {
 
   async findOfficeByKey(key: string): Promise<GesOffice | null> {
     return this.officeRepo.findOne({ where: { officeKey: key } });
+  }
+
+  // Find GES office by tenant key (for logged-in GES users)
+  async findOfficeByTenantKey(tenantKey: string): Promise<GesOffice | null> {
+    return this.officeRepo.findOne({ where: { officeKey: tenantKey } });
   }
 
   async updateOffice(id: string, dto: UpdateGesOfficeDto): Promise<GesOffice> {

@@ -141,7 +141,7 @@ export class TenantsService {
 
   async getAllPublicBranding() {
     const tenants = await this.tenantRepo.find({
-      where: { active: true },
+      where: { active: true, isGesOffice: false },
       order: { schoolName: 'ASC' },
     });
     return tenants.map((t) => ({

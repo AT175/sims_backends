@@ -90,6 +90,10 @@ export class Tenant {
   @Column({ type: 'varchar', nullable: true })
   gesCircuitId: string | null;
 
+  // True if this tenant is a GES office (not a school)
+  @Column({ type: 'boolean', default: false })
+  isGesOffice: boolean;
+
   @Column({ type: 'boolean', default: true })
   active: boolean;
 
