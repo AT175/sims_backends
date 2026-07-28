@@ -40,6 +40,7 @@ import { SecretaryModule } from './secretary/secretary.module';
 import { SrcModule } from './src/src.module';
 import { WelfareModule } from './welfare/welfare.module';
 import { SubscriptionModule } from './subscription/subscription.module';
+import { GesModule } from './ges/ges.module';
 import { RolesGuard } from './auth/roles.guard';
 import { Reflector } from '@nestjs/core';
 
@@ -112,6 +113,7 @@ import { Reflector } from '@nestjs/core';
     SrcModule,
     WelfareModule,
     SubscriptionModule,
+    GesModule,
   ],
   providers: [
     {
