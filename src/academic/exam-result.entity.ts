@@ -32,6 +32,9 @@ export class ExamResult {
   @Column({ type: 'varchar', nullable: true })
   grade: string | null;
 
+  @Column({ type: 'varchar', nullable: true })
+  gradingScheme: string | null;
+
   @Column({ type: 'text', nullable: true })
   remarks: string | null;
 

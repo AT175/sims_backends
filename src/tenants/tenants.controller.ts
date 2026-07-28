@@ -10,11 +10,12 @@ import {
   Query,
 } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
-import { IsString, MinLength, IsOptional, IsInt, IsArray, IsBoolean } from 'class-validator';
+import { IsString, MinLength, IsOptional, IsInt, IsArray, IsBoolean, IsObject } from 'class-validator';
 import { TenantsService } from './tenants.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
+import { SCHOOL_LEVEL_CONFIGS, GRADING_SCHEMES } from './school-level.config';
 
 class CreateTenantDto {
   @IsString()
@@ -28,6 +29,10 @@ class CreateTenantDto {
   @IsOptional()
   @IsString()
   schoolCode?: string;
+
+  @IsOptional()
+  @IsString()
+  schoolLevel?: string;
 
   @IsOptional()
   @IsString()
@@ -81,6 +86,26 @@ class UpdateTenantDto {
 
   @IsOptional()
   @IsString()
+  schoolLevel?: string;
+
+  @IsOptional()
+  @IsString()
+  gradingScheme?: string;
+
+  @IsOptional()
+  @IsObject()
+  classLevelNames?: Record<string, string>;
+
+  @IsOptional()
+  @IsArray()
+  offeredLevels?: string[];
+
+  @IsOptional()
+  @IsInt()
+  termsPerYear?: number;
+
+  @IsOptional()
+  @IsString()
   region?: string;
 
   @IsOptional()
@@ -130,6 +155,10 @@ class UpdateTenantDto {
   @IsOptional()
   @IsArray()
   enabledModules?: string[];
+
+  @IsOptional()
+  @IsArray()
+  disabledRoles?: string[];
 
   @IsOptional()
   @IsBoolean()
@@ -217,6 +246,29 @@ class UpdateTenantDto {
 @SkipThrottle()
 export class TenantsController {
   constructor(private readonly tenantsService: TenantsService) {}
+
+  @Get('school-level-configs')
+  async getSchoolLevelConfigs() {
+    return {
+      levels: Object.entries(SCHOOL_LEVEL_CONFIGS).map(([key, config]) => ({
+        key,
+        label: config.label,
+        shortLabel: config.shortLabel,
+        defaultGradingScheme: config.defaultGradingScheme,
+        defaultClassLevels: config.defaultClassLevels,
+        defaultClassLevelNames: config.defaultClassLevelNames,
+        usesCssps: config.usesCssps,
+        typicallyBoarding: config.typicallyBoarding,
+        excludedRoles: config.excludedRoles,
+        defaultModules: config.defaultModules,
+      })),
+      gradingSchemes: Object.entries(GRADING_SCHEMES).map(([key, scheme]) => ({
+        key,
+        label: scheme.label,
+        bands: scheme.bands,
+      })),
+    };
+  }
 
   @Get()
   @Roles('system_admin')

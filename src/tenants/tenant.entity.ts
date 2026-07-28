@@ -22,6 +22,27 @@ export class Tenant {
   @Column({ type: 'varchar', nullable: true })
   schoolCode: string | null;
 
+  // ── School Level Support ──
+  // kg = Kindergarten, primary = Basic 1-6, jhs = Basic 7-9, shs = SHS 1-3, combined = multiple levels
+  @Column({ type: 'varchar', default: 'shs' })
+  schoolLevel: string;
+
+  // Grading scheme: 'wassce' (A1-F9), 'bece' (1-9), 'continuous' (percentage), 'descriptive' (Beginning/Developing/Proficient)
+  @Column({ type: 'varchar', default: 'wassce' })
+  gradingScheme: string;
+
+  // Configurable class-level names per school, e.g. { "shs1": "SHS 1", "basic1": "Basic 1", "kg1": "KG 1" }
+  @Column({ type: 'simple-json', nullable: true })
+  classLevelNames: Record<string, string> | null;
+
+  // Which levels this school offers (for combined schools), e.g. ['kg', 'primary', 'jhs', 'shs']
+  @Column({ type: 'simple-array', default: '' })
+  offeredLevels: string[];
+
+  // Number of terms per year (3 for most Ghanaian schools, 2 for some)
+  @Column({ type: 'int', default: 3 })
+  termsPerYear: number;
+
   @Column({ type: 'varchar', nullable: true })
   region: string | null;
 
@@ -60,6 +81,10 @@ export class Tenant {
 
   @Column({ type: 'simple-array', default: '' })
   enabledModules: string[];
+
+  // Roles that are disabled for this tenant (based on school level), e.g. ['src', 'electoral_commission', 'dining_hall_master']
+  @Column({ type: 'simple-array', default: '' })
+  disabledRoles: string[];
 
   @Column({ type: 'boolean', default: true })
   active: boolean;

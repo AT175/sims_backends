@@ -30,6 +30,25 @@ export class AdmissionApplication {
   @Column({ type: 'varchar', nullable: true })
   programme: string | null;
 
+  // The class level being applied to (e.g. 'shs1', 'jhs1', 'basic1', 'kg1')
+  @Column({ type: 'varchar', nullable: true })
+  appliedClassLevel: string | null;
+
+  // Previous school info (for JHS/Primary/KG transfers)
+  @Column({ type: 'varchar', nullable: true })
+  previousSchool: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  previousClass: string | null;
+
+  // Date of birth (required for KG/Primary admissions)
+  @Column({ type: 'varchar', nullable: true })
+  dateOfBirth: string | null;
+
+  // Gender
+  @Column({ type: 'varchar', nullable: true })
+  gender: string | null;
+
   @Column({ default: false })
   documentsVerified: boolean;
 

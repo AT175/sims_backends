@@ -2,6 +2,12 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Tenant } from './tenant.entity';
+import {
+  getLevelConfig,
+  getDefaultDisabledRoles,
+  getDefaultClassLevels,
+  getDefaultClassLevelNames,
+} from './school-level.config';
 
 @Injectable()
 export class TenantsService {
@@ -30,6 +36,7 @@ export class TenantsService {
     tenantKey: string;
     schoolName: string;
     schoolCode?: string;
+    schoolLevel?: string;
     region?: string;
     district?: string;
     address?: string;
@@ -46,10 +53,18 @@ export class TenantsService {
       throw new BadRequestException('Tenant key already exists');
     }
 
+    const level = data.schoolLevel || 'shs';
+    const levelConfig = getLevelConfig(level);
+
     const tenant = this.tenantRepo.create({
       tenantKey: data.tenantKey,
       schoolName: data.schoolName,
       schoolCode: data.schoolCode ?? null,
+      schoolLevel: level,
+      gradingScheme: levelConfig.defaultGradingScheme,
+      classLevelNames: getDefaultClassLevelNames(level),
+      offeredLevels: getDefaultClassLevels(level),
+      termsPerYear: 3,
       region: data.region ?? null,
       district: data.district ?? null,
       address: data.address ?? null,
@@ -59,7 +74,8 @@ export class TenantsService {
       maxStaff: data.maxStaff ?? 150,
       subscriptionPlan: data.subscriptionPlan ?? 'Standard',
       subscriptionExpiry: data.subscriptionExpiry ?? null,
-      enabledModules: data.enabledModules ?? [],
+      enabledModules: data.enabledModules ?? levelConfig.defaultModules,
+      disabledRoles: getDefaultDisabledRoles(level),
     });
     return this.tenantRepo.save(tenant);
   }
@@ -67,6 +83,11 @@ export class TenantsService {
   async update(id: string, data: Partial<{
     schoolName: string;
     schoolCode: string;
+    schoolLevel: string;
+    gradingScheme: string;
+    classLevelNames: Record<string, string>;
+    offeredLevels: string[];
+    termsPerYear: number;
     region: string;
     district: string;
     address: string;
@@ -80,6 +101,7 @@ export class TenantsService {
     subscriptionPlan: string;
     subscriptionExpiry: string;
     enabledModules: string[];
+    disabledRoles: string[];
     active: boolean;
     motto: string;
     primaryColor: string;
@@ -102,6 +124,17 @@ export class TenantsService {
     testimonials: { author: string; role: string; content: string; rating: number }[];
   }>): Promise<Tenant> {
     const tenant = await this.findOne(id);
+
+    // If schoolLevel is changing, auto-update related configs
+    if (data.schoolLevel && data.schoolLevel !== tenant.schoolLevel) {
+      const levelConfig = getLevelConfig(data.schoolLevel);
+      if (!data.gradingScheme) data.gradingScheme = levelConfig.defaultGradingScheme;
+      if (!data.classLevelNames) data.classLevelNames = getDefaultClassLevelNames(data.schoolLevel);
+      if (!data.offeredLevels) data.offeredLevels = getDefaultClassLevels(data.schoolLevel);
+      if (!data.disabledRoles) data.disabledRoles = getDefaultDisabledRoles(data.schoolLevel);
+      if (!data.enabledModules) data.enabledModules = levelConfig.defaultModules;
+    }
+
     Object.assign(tenant, data);
     return this.tenantRepo.save(tenant);
   }
@@ -115,6 +148,7 @@ export class TenantsService {
       tenantKey: t.tenantKey,
       schoolName: t.schoolName,
       schoolCode: t.schoolCode,
+      schoolLevel: t.schoolLevel,
       logoUrl: t.logoUrl,
       motto: t.motto,
       primaryColor: t.primaryColor || '#0F4C75',
@@ -133,6 +167,12 @@ export class TenantsService {
       tenantKey: tenant.tenantKey,
       schoolName: tenant.schoolName,
       schoolCode: tenant.schoolCode,
+      schoolLevel: tenant.schoolLevel,
+      gradingScheme: tenant.gradingScheme,
+      classLevelNames: tenant.classLevelNames,
+      offeredLevels: tenant.offeredLevels,
+      termsPerYear: tenant.termsPerYear,
+      disabledRoles: tenant.disabledRoles,
       logoUrl: tenant.logoUrl,
       motto: tenant.motto,
       primaryColor: tenant.primaryColor || '#1a73e8',

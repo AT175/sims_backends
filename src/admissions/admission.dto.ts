@@ -28,6 +28,28 @@ export class SubmitAdmissionDto {
   programme?: string;
 
   @IsOptional()
+  @IsString()
+  appliedClassLevel?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(100)
+  previousSchool?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  previousClass?: string;
+
+  @IsOptional()
+  @IsString()
+  dateOfBirth?: string;
+
+  @IsOptional()
+  @IsString()
+  gender?: string;
+
+  @IsOptional()
   @IsBoolean()
   isDirectApplication?: boolean;
 }
