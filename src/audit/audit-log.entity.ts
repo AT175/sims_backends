@@ -36,6 +36,12 @@ export class AuditLog {
   @Column({ default: false })
   success: boolean;
 
+  @Column({ type: 'simple-array', nullable: true })
+  roles: string[] | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  tenantId: string | null;
+
   @CreateDateColumn()
   createdAt: Date;
 }

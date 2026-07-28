@@ -153,6 +153,8 @@ export class AuthService {
       resource: 'auth',
       details: `Role: ${user.activeRole}`,
       success: true,
+      roles: user.roles,
+      tenantId: user.tenantId,
     });
 
     // Fetch tenant info for school name and logo
@@ -229,6 +231,8 @@ export class AuthService {
       action: 'password_change',
       resource: 'auth',
       success: true,
+      roles: user.roles,
+      tenantId: user.tenantId,
     });
     return { message: 'Password changed successfully' };
   }
@@ -269,6 +273,8 @@ export class AuthService {
       action: 'profile_picture_upload',
       resource: 'auth',
       success: true,
+      roles: user.roles,
+      tenantId: user.tenantId,
     });
     return {
       id: user.id,
@@ -611,6 +617,8 @@ export class AuthService {
       resource: 'users',
       details: `Roles: ${data.roles.join(', ')}${mustChangePassword ? ' (default password)' : ''}`,
       success: true,
+      roles: data.roles,
+      tenantId: data.tenantId,
     });
 
     return {
@@ -668,6 +676,8 @@ export class AuthService {
       action: 'admin_password_reset',
       resource: 'users',
       success: true,
+      roles: user.roles,
+      tenantId: user.tenantId,
     });
 
     return { message: 'Password reset successfully', generatedPassword };
@@ -743,6 +753,8 @@ export class AuthService {
       resource: 'users',
       details: `Updated by admin`,
       success: true,
+      roles: user.roles,
+      tenantId: user.tenantId,
     });
 
     return {
@@ -825,6 +837,8 @@ export class AuthService {
       resource: 'users',
       details: `Parent account created for student ${student.admissionNumber}`,
       success: true,
+      roles: parentUser.roles,
+      tenantId: parentUser.tenantId,
     });
 
     return {
