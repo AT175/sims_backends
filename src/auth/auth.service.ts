@@ -524,10 +524,18 @@ export class AuthService {
     roles: string[];
     tenantId: string;
     activeRole?: string;
+    creatorRoles?: string[];
   }) {
     const existing = await this.userRepo.findOne({ where: { username: data.username } });
     if (existing) {
       throw new BadRequestException('Username already exists');
+    }
+
+    // Non-system-admin creators cannot assign the system_admin role
+    const creatorRoles = data.creatorRoles || [];
+    const isSystemAdmin = creatorRoles.includes('system_admin');
+    if (!isSystemAdmin && data.roles.includes('system_admin')) {
+      throw new BadRequestException('Only a System Administrator can assign the system_admin role');
     }
 
     // Generate a unique random password if none provided
@@ -725,7 +733,7 @@ export class AuthService {
     };
   }
 
-  async updateUser(userId: string, data: { displayName?: string; username?: string; roles?: string[] }) {
+  async updateUser(userId: string, data: { displayName?: string; username?: string; roles?: string[]; creatorRoles?: string[] }) {
     const user = await this.userRepo.findOne({ where: { id: userId } });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -741,6 +749,12 @@ export class AuthService {
       user.displayName = data.displayName;
     }
     if (data.roles !== undefined) {
+      // Non-system-admin creators cannot assign the system_admin role
+      const creatorRoles = data.creatorRoles || [];
+      const isSystemAdmin = creatorRoles.includes('system_admin');
+      if (!isSystemAdmin && data.roles.includes('system_admin')) {
+        throw new BadRequestException('Only a System Administrator can assign the system_admin role');
+      }
       user.roles = data.roles;
       user.activeRole = data.roles[0] || user.activeRole;
     }

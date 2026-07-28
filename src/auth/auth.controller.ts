@@ -230,8 +230,10 @@ export class AuthController {
   @Roles('headmaster', 'system_admin')
   @SkipThrottle()
   async createUser(@Body() dto: CreateUserDto, @Request() req: any) {
-    const tenantId = dto.tenantId || req.user.tenantId;
-    return this.authService.createUser({ ...dto, tenantId });
+    const isSystemAdmin = (req.user.roles || []).includes('system_admin');
+    // Headmasters can only create users within their own tenant
+    const tenantId = isSystemAdmin ? (dto.tenantId || req.user.tenantId) : req.user.tenantId;
+    return this.authService.createUser({ ...dto, tenantId, creatorRoles: req.user.roles || [] });
   }
 
   @Post('users/:id/reset-password')
@@ -262,8 +264,8 @@ export class AuthController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('headmaster', 'system_admin')
   @SkipThrottle()
-  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto) {
-    return this.authService.updateUser(id, dto);
+  async updateUser(@Param('id') id: string, @Body() dto: UpdateUserDto, @Request() req: any) {
+    return this.authService.updateUser(id, { ...dto, creatorRoles: req.user.roles || [] });
   }
 
   @Post('parent-setup')
