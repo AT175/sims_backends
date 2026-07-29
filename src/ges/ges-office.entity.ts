@@ -9,7 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-export type GesLevel = 'national' | 'regional' | 'district' | 'circuit';
+export type GesLevel = 'national' | 'regional' | 'district';
 
 @Entity('ges_offices')
 export class GesOffice {
@@ -26,7 +26,7 @@ export class GesOffice {
   @Column({ type: 'varchar' })
   level: GesLevel;
 
-  // Parent office (e.g. circuit -> district, district -> region, region -> national)
+  // Parent office (e.g. district -> region, region -> national)
   @Index()
   @Column({ type: 'varchar', nullable: true })
   parentId: string | null;

@@ -86,9 +86,9 @@ export class Tenant {
   @Column({ type: 'simple-array', default: '' })
   disabledRoles: string[];
 
-  // GES circuit office this school belongs to
+  // GES district office this school belongs to
   @Column({ type: 'varchar', nullable: true })
-  gesCircuitId: string | null;
+  gesOfficeId: string | null;
 
   // True if this tenant is a GES office (not a school)
   @Column({ type: 'boolean', default: false })

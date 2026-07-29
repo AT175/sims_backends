@@ -1,6 +1,6 @@
 import { IsString, IsOptional, IsIn, IsObject, IsBoolean, IsArray, MaxLength, MinLength } from 'class-validator';
 
-const GES_LEVELS = ['national', 'regional', 'district', 'circuit'];
+const GES_LEVELS = ['national', 'regional', 'district'];
 
 export class CreateGesOfficeDto {
   @IsString()
@@ -101,6 +101,7 @@ export class UpdateGesOfficeDto {
 const REPORT_TYPES = [
   'enrollment', 'staffing', 'infrastructure', 'academic_performance',
   'financial', 'health_safety', 'inspection', 'compliance', 'special_report',
+  'supervisory', 'audit', 'emis',
 ];
 
 export class CreateGesReportDto {
@@ -149,7 +150,7 @@ export class UpdateGesReportStatusDto {
   reviewNotes?: string;
 }
 
-export class AssignSchoolToCircuitDto {
+export class AssignSchoolToOfficeDto {
   @IsString()
-  gesCircuitId: string;
+  gesOfficeId: string;
 }

@@ -16,7 +16,10 @@ export type GesReportType =
   | 'health_safety'
   | 'inspection'
   | 'compliance'
-  | 'special_report';
+  | 'special_report'
+  | 'supervisory'
+  | 'audit'
+  | 'emis';
 
 export type GesReportStatus = 'draft' | 'submitted' | 'under_review' | 'approved' | 'rejected' | 'overdue';
 
