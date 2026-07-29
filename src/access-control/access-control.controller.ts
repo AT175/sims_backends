@@ -8,7 +8,7 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common';
-import { IsString, IsArray, IsOptional } from 'class-validator';
+import { IsString, IsArray, IsOptional, ValidateIf } from 'class-validator';
 import { AccessControlService } from './access-control.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/roles.guard';
@@ -30,6 +30,10 @@ class CreateGrantDto {
   @IsString()
   dashboardLabel: string;
 
+  @ValidateIf((o) => o.allowedPages === 'all')
+  @IsString()
+  @ValidateIf((o) => o.allowedPages !== 'all')
+  @IsArray()
   allowedPages: string[] | 'all';
 
   @IsString()
