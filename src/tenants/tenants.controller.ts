@@ -271,7 +271,7 @@ export class TenantsController {
   }
 
   @Get()
-  @Roles('system_admin', 'headmaster')
+  @Roles('system_admin')
   async findAll() {
     return this.tenantsService.findAll();
   }

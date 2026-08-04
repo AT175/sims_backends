@@ -35,6 +35,11 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   profilePictureUrl: string | null;
 
+  // School level this user has access to (for combined schools)
+  // kg, primary, jhs, shs, or null for full access
+  @Column({ type: 'varchar', nullable: true })
+  schoolLevel: string | null;
+
   @Column({ type: 'simple-array' })
   roles: string[];
 

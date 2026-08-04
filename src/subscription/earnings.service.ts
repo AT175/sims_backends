@@ -46,7 +46,7 @@ export class EarningsService {
       .where('e.userId = :userId', { userId })
       .andWhere('e.tenantId = :tenantId', { tenantId })
       .andWhere('e.type = :type', { type: 'credit' })
-      .andWhere('e."createdAt"::text LIKE :today', { today: `${today}%` })
+      .andWhere("e.createdAt::text LIKE :today", { today: `${today}%` })
       .getCount();
 
     if (todayCount >= config.maxActionsPerDay) return;

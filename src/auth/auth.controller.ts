@@ -92,6 +92,10 @@ class CreateUserDto {
   @IsOptional()
   @IsString()
   activeRole?: string;
+
+  @IsOptional()
+  @IsString()
+  schoolLevel?: string;
 }
 
 class AdminResetPasswordDto {

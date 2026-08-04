@@ -525,6 +525,7 @@ export class AuthService {
     tenantId: string;
     activeRole?: string;
     creatorRoles?: string[];
+    schoolLevel?: string;
   }) {
     const existing = await this.userRepo.findOne({ where: { username: data.username } });
     if (existing) {
@@ -583,6 +584,7 @@ export class AuthService {
       roles: data.roles,
       activeRole: data.activeRole || data.roles[0] || 'staff',
       mustChangePassword,
+      schoolLevel: data.schoolLevel || null,
     });
     await this.userRepo.save(user);
 
