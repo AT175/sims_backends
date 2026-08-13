@@ -40,6 +40,14 @@ export class StudentsService {
     const student = this.repo.create({ ...dto, tenantId });
     const saved = await this.repo.save(student);
 
+    // Check if a parent account already exists for this guardian (by phone)
+    let parentUser = await this.userRepo.findOne({
+      where: { tenantId },
+    });
+    // Find parent by matching guardian phone in a custom field or by checking existing linked students
+    // For now, we'll create a parent account linked to this student
+    // TODO: Implement parent account lookup by guardian phone/email
+
     // Generate a username from admission number (e.g. ADM2024001 -> adm2024001)
     const baseUsername = dto.admissionNumber.toLowerCase().replace(/\s+/g, '');
     let username = baseUsername;
@@ -77,14 +85,91 @@ export class StudentsService {
       roles: ['student', 'parent'],
       activeRole: 'student',
       mustChangePassword: true,
+      linkedStudentIds: [saved.id], // Link this student to the user account
     });
     await this.userRepo.save(user);
 
     // Link student to user
     saved.userId = user.id;
+    saved.parentUserId = user.id; // Also set parentUserId for backward compatibility
     await this.repo.save(saved);
 
     return { student: saved, credentials: { username, password } };
+  }
+
+  async linkStudentToParent(studentId: string, parentUserId: string, tenantId: string): Promise<{ success: boolean }> {
+    const student = await this.findOne(studentId, tenantId);
+    const parent = await this.userRepo.findOne({ where: { id: parentUserId, tenantId } });
+    
+    if (!parent) {
+      throw new NotFoundException('Parent account not found');
+    }
+
+    if (!parent.roles.includes('parent')) {
+      throw new BadRequestException('The specified user is not a parent account');
+    }
+
+    // Add student ID to parent's linkedStudentIds
+    const linkedIds = parent.linkedStudentIds || [];
+    if (!linkedIds.includes(studentId)) {
+      linkedIds.push(studentId);
+      parent.linkedStudentIds = linkedIds;
+      await this.userRepo.save(parent);
+    }
+
+    // Update student's parentUserId
+    student.parentUserId = parentUserId;
+    await this.repo.save(student);
+
+    return { success: true };
+  }
+
+  async getWardsForParent(parentUserId: string, tenantId: string): Promise<any[]> {
+    const parent = await this.userRepo.findOne({ where: { id: parentUserId, tenantId } });
+    
+    if (!parent || !parent.linkedStudentIds || parent.linkedStudentIds.length === 0) {
+      // Fallback to old method using parentUserId in student entity
+      const student = await this.repo.findOne({ where: { parentUserId, tenantId } });
+      if (!student) {
+        return [];
+      }
+      return [{
+        id: student.id,
+        admissionNumber: student.admissionNumber,
+        firstName: student.firstName,
+        lastName: student.lastName,
+        name: `${student.firstName} ${student.lastName}`,
+        classSectionId: student.classSectionId,
+        houseId: student.houseId,
+        gender: student.gender,
+        status: student.status,
+        guardianName: student.guardianName,
+        guardianPhone: student.guardianPhone,
+      }];
+    }
+
+    // Fetch all linked students
+    const students = await this.repo.find({
+      where: { 
+        id: parent.linkedStudentIds as any,
+        tenantId,
+        deletedAt: null as any,
+      },
+    });
+
+    return students.map(student => ({
+      id: student.id,
+      admissionNumber: student.admissionNumber,
+      firstName: student.firstName,
+      lastName: student.lastName,
+      name: `${student.firstName} ${student.lastName}`,
+      classSectionId: student.classSectionId,
+      houseId: student.houseId,
+      gender: student.gender,
+      status: student.status,
+      guardianName: student.guardianName,
+      guardianPhone: student.guardianPhone,
+    }));
   }
 
   async getWardForParent(parentUserId: string, tenantId: string): Promise<any> {

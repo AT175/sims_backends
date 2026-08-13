@@ -43,6 +43,17 @@ export class StudentsController {
     return this.service.getWardForParent(req.user.id, req.user.tenantId);
   }
 
+  @Get('wards')
+  async getWards(@Request() req: any) {
+    return this.service.getWardsForParent(req.user.id, req.user.tenantId);
+  }
+
+  @Post('link-parent')
+  @Roles('headmaster', 'system_admin', 'registry')
+  async linkToParent(@Body() body: { studentId: string; parentUserId: string }, @Request() req: any) {
+    return this.service.linkStudentToParent(body.studentId, body.parentUserId, req.user.tenantId);
+  }
+
   @Get(':id')
   async findOne(@Param('id', ParseUUIDPipe) id: string, @Request() req: any) {
     return this.service.findOne(id, req.user.tenantId);

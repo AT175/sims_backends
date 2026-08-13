@@ -40,6 +40,10 @@ export class User {
   @Column({ type: 'varchar', nullable: true })
   schoolLevel: string | null;
 
+  // Linked student IDs for parent accounts (allows one parent account for multiple children)
+  @Column({ type: 'simple-array', nullable: true })
+  linkedStudentIds: string[] | null;
+
   @Column({ type: 'simple-array' })
   roles: string[];
 
