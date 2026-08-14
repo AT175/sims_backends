@@ -35,6 +35,8 @@ export class AdmissionsService {
       status: 'received',
       documentsVerified: false,
       isDirectApplication: dto.isDirectApplication || !dto.csspsPlacementRef,
+      paymentStatus: dto.paymentStatus || 'pending',
+      paymentMethod: dto.paymentMethod || null,
     });
     return this.repo.save(app);
   }

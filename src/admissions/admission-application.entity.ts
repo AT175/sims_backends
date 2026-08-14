@@ -67,6 +67,12 @@ export class AdmissionApplication {
   @Column({ type: 'boolean', default: false })
   isDirectApplication: boolean;
 
+  @Column({ type: 'varchar', nullable: true, default: 'pending' })
+  paymentStatus: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  paymentMethod: string | null;
+
   @Index()
   @Column()
   tenantId: string;

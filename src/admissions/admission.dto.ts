@@ -52,6 +52,16 @@ export class SubmitAdmissionDto {
   @IsOptional()
   @IsBoolean()
   isDirectApplication?: boolean;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['paid', 'skipped'])
+  paymentStatus?: string;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  paymentMethod?: string;
 }
 
 export class CheckStatusDto {
