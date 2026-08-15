@@ -25,4 +25,4 @@ services:
       - key: JWT_REFRESH_SECRET
         value: sims-refresh-secret-2026-change-me
       - key: CORS_ORIGIN
-        value: https://sims-frontend.netlify.app
+        value: https://simsgh.netlify.app
