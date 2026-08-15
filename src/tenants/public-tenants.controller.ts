@@ -1,7 +1,9 @@
 import { Controller, Get, Param } from '@nestjs/common';
+import { SkipThrottle } from '@nestjs/throttler';
 import { TenantsService } from './tenants.service';
 
 @Controller('public/tenants')
+@SkipThrottle()
 export class PublicTenantsController {
   constructor(private readonly tenantsService: TenantsService) {}
 

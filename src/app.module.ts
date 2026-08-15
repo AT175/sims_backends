@@ -51,12 +51,12 @@ import { Reflector } from '@nestjs/core';
       {
         name: 'default',
         ttl: 60000,
-        limit: 100,
+        limit: 500,
       },
       {
         name: 'auth',
         ttl: 60000,
-        limit: 5,
+        limit: 10,
       },
     ]),
     TypeOrmModule.forRootAsync({
