@@ -276,6 +276,12 @@ export class TenantsController {
     return this.tenantsService.findAll();
   }
 
+  @Post('migrate-keys')
+  @Roles('system_admin')
+  async migrateTenantKeys() {
+    return this.tenantsService.migrateTenantKeys();
+  }
+
   @Get(':id')
   @Roles('system_admin', 'headmaster')
   async findOne(@Param('id') id: string) {

@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { Tenant } from './tenant.entity';
 import {
   getLevelConfig,
@@ -14,6 +14,7 @@ export class TenantsService {
   constructor(
     @InjectRepository(Tenant)
     private readonly tenantRepo: Repository<Tenant>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async findAll(): Promise<Tenant[]> {
@@ -205,5 +206,54 @@ export class TenantsService {
     const tenant = await this.findOne(id);
     await this.tenantRepo.remove(tenant);
     return { message: 'Tenant deleted' };
+  }
+
+  async migrateTenantKeys(): Promise<{ migrated: number; details: { oldKey: string; newKey: string }[] }> {
+    const tenants = await this.tenantRepo.find();
+    const toMigrate = tenants.filter((t) => t.tenantKey.startsWith('tenant-'));
+
+    if (toMigrate.length === 0) {
+      return { migrated: 0, details: [] };
+    }
+
+    const details: { oldKey: string; newKey: string }[] = [];
+
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+
+    try {
+      for (const tenant of toMigrate) {
+        const oldKey = tenant.tenantKey;
+        const newKey = oldKey.replace(/^tenant-/, '');
+
+        // Check if newKey already exists (avoid collision)
+        const existing = await queryRunner.manager.findOne(Tenant, { where: { tenantKey: newKey } });
+        if (existing) {
+          console.warn(`[migrateTenantKeys] Skipping ${oldKey} -> ${newKey} (already exists)`);
+          continue;
+        }
+
+        // Update tenant key
+        tenant.tenantKey = newKey;
+        await queryRunner.manager.save(tenant);
+
+        // Update users referencing the old key
+        await queryRunner.manager.query(
+          'UPDATE "user" SET "tenantId" = $1 WHERE "tenantId" = $2',
+          [newKey, oldKey],
+        );
+
+        details.push({ oldKey, newKey });
+      }
+
+      await queryRunner.commitTransaction();
+      return { migrated: details.length, details };
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+      throw err;
+    } finally {
+      await queryRunner.release();
+    }
   }
 }
