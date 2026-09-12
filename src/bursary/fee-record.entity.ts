@@ -51,6 +51,9 @@ export class FeeRecord {
   @Column({ type: 'varchar', nullable: true })
   lastPaymentMethod: string | null;
 
+  @Column({ type: 'date', nullable: true })
+  billingDate: string | null;
+
   @Index()
   @Column()
   tenantId: string;

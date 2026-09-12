@@ -73,6 +73,9 @@ export class AdmissionApplication {
   @Column({ type: 'varchar', nullable: true })
   paymentMethod: string | null;
 
+  @Column({ type: 'date', nullable: true })
+  applicationDate: string | null;
+
   @Index()
   @Column()
   tenantId: string;

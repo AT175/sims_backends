@@ -27,6 +27,10 @@ export class CreateFeeRecordDto {
   @IsOptional()
   @IsString()
   guardianPhone?: string;
+
+  @IsOptional()
+  @IsDateString()
+  billingDate?: string;
 }
 
 export class RecordPaymentDto {
@@ -48,4 +52,8 @@ export class RecordPaymentDto {
   @IsOptional()
   @IsString()
   notes?: string;
+
+  @IsOptional()
+  @IsDateString()
+  paymentDate?: string;
 }

@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsEmail, IsIn, MaxLength, Matches, IsBoolean } from 'class-validator';
+import { IsString, IsOptional, IsEmail, IsIn, MaxLength, Matches, IsBoolean, IsDateString } from 'class-validator';
 
 export class SubmitAdmissionDto {
   @IsString()
@@ -62,6 +62,10 @@ export class SubmitAdmissionDto {
   @IsString()
   @MaxLength(50)
   paymentMethod?: string;
+
+  @IsOptional()
+  @IsDateString()
+  applicationDate?: string;
 }
 
 export class CheckStatusDto {

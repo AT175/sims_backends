@@ -24,6 +24,7 @@ export class BursaryService {
       ...dto,
       balance: dto.amountDue,
       status: 'Owing',
+      billingDate: dto.billingDate || new Date().toISOString().slice(0, 10),
       tenantId,
     });
     return this.feeRepo.save(record);
@@ -35,6 +36,7 @@ export class BursaryService {
       throw new NotFoundException('Fee record not found');
     }
 
+    const paymentDate = dto.paymentDate || new Date().toISOString().slice(0, 10);
     const receiptNo = `RCP-${Date.now()}`;
     const receipt = this.receiptRepo.create({
       feeRecordId: dto.feeRecordId,
@@ -42,7 +44,7 @@ export class BursaryService {
       admNo: fee.admNo,
       amount: dto.amount,
       method: dto.method,
-      date: new Date().toISOString().slice(0, 10),
+      date: paymentDate,
       receivedBy: dto.receivedBy,
       receiptNo,
       term: dto.term,
@@ -52,7 +54,7 @@ export class BursaryService {
 
     fee.amountPaid = Number(fee.amountPaid) + dto.amount;
     fee.balance = Number(fee.amountDue) - fee.amountPaid;
-    fee.lastPaymentDate = new Date().toISOString().slice(0, 10);
+    fee.lastPaymentDate = paymentDate;
     fee.lastPaymentMethod = dto.method;
     fee.status = fee.balance <= 0 ? 'Cleared' : 'Partial';
 

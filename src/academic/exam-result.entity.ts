@@ -38,6 +38,9 @@ export class ExamResult {
   @Column({ type: 'text', nullable: true })
   remarks: string | null;
 
+  @Column({ type: 'date', nullable: true })
+  examDate: string | null;
+
   @Index()
   @Column()
   tenantId: string;

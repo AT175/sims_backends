@@ -37,6 +37,7 @@ export class AdmissionsService {
       isDirectApplication: dto.isDirectApplication || !dto.csspsPlacementRef,
       paymentStatus: dto.paymentStatus || 'pending',
       paymentMethod: dto.paymentMethod || null,
+      applicationDate: dto.applicationDate || new Date().toISOString().slice(0, 10),
     });
     return this.repo.save(app);
   }

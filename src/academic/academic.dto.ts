@@ -52,6 +52,10 @@ export class CreateExamResultDto {
   @IsOptional()
   @IsString()
   remarks?: string;
+
+  @IsOptional()
+  @IsDateString()
+  examDate?: string;
 }
 
 export class CreateAttendanceDto {
