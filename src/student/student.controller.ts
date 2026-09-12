@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, UseGuards, Request } from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Request, Param } from '@nestjs/common';
 import { SkipThrottle } from '@nestjs/throttler';
 import { StudentService } from './student.service';
 import * as dto from './student.dto';
@@ -78,6 +78,15 @@ export class StudentController {
 
   @Get('quizzes')
   async getQuizzes(@Request() r: any) { return this.svc.getQuizzes(r.user.id, r.user.tenantId); }
+
+  @Get('published-assignments')
+  async getPublishedAssignments(@Request() r: any) { return this.svc.getPublishedAssignments(r.user.id, r.user.tenantId); }
+
+  @Get('lesson-recaps')
+  async getLessonRecaps(@Request() r: any) { return this.svc.getLessonRecaps(r.user.id, r.user.tenantId); }
+
+  @Get('ward-academic/:studentId')
+  async getWardAcademicData(@Param('studentId') studentId: string, @Request() r: any) { return this.svc.getWardAcademicData(studentId, r.user.tenantId); }
 
   // ── House Info ──
   @Get('house/roll-calls')

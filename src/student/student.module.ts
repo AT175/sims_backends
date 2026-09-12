@@ -18,6 +18,8 @@ import { LiveSessionEntity } from '../teacher/entities/live-session.entity';
 import { AVRecordingEntity } from '../teacher/entities/av-recording.entity';
 import { SharedResourceEntity } from '../teacher/entities/shared-resource.entity';
 import { QuizEntity } from '../teacher/entities/quiz.entity';
+import { AssignmentEntity } from '../teacher/entities/assignment.entity';
+import { LessonRecapEntity } from '../teacher/entities/lesson-recap.entity';
 import { StudentService } from './student.service';
 import { StudentController } from './student.controller';
 
@@ -42,6 +44,8 @@ import { StudentController } from './student.controller';
       AVRecordingEntity,
       SharedResourceEntity,
       QuizEntity,
+      AssignmentEntity,
+      LessonRecapEntity,
     ]),
   ],
   providers: [StudentService],

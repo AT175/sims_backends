@@ -128,4 +128,15 @@ export class TeacherController {
   @Get('ai-lesson-plan/class-levels') async getGESClassLevels() { return this.svc.getGESClassLevels(); }
   @Get('ai-lesson-plan/subjects') async getGESSubjects(@Query('classKey') classKey: string) { return this.svc.getGESSubjects(classKey); }
   @Get('ai-lesson-plan/week-info') async getGESWeekInfo(@Query('classKey') classKey: string, @Query('subject') subject: string, @Query('week') week: number, @Query('term') term: number) { return this.svc.getGESWeekInfo(classKey, subject, week, term); }
+
+  // ── AI Assessment Generator ──
+  @Post('ai-assessment') async generateAssessment(@Body() d: dto.GenerateAssessmentDto, @Request() r: any) { return this.svc.generateAssessment(d, this.tId(r), r.user?.displayName || ''); }
+
+  // ── Lesson Recap ──
+  @Post('lesson-recaps') async createLessonRecap(@Body() d: dto.CreateLessonRecapDto, @Request() r: any) { return this.svc.createLessonRecap(d, this.tId(r), r.user?.id || '', r.user?.displayName || ''); }
+  @Get('lesson-recaps') async getLessonRecaps(@Query('classForm') classForm: string, @Request() r: any) { return this.svc.getLessonRecaps(this.tId(r), classForm); }
+
+  // ── Published assignments/quizzes (for student/parent access) ──
+  @Get('published-assignments') async getPublishedAssignments(@Query('classForm') classForm: string, @Request() r: any) { return this.svc.getPublishedAssignments(this.tId(r), classForm); }
+  @Get('published-quizzes') async getPublishedQuizzes(@Query('classForm') classForm: string, @Request() r: any) { return this.svc.getPublishedQuizzes(this.tId(r), classForm); }
 }

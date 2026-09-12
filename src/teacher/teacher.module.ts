@@ -17,6 +17,7 @@ import { CalendarEventEntity } from './entities/calendar-event.entity';
 import { SharedResourceEntity } from './entities/shared-resource.entity';
 import { TeacherNotificationEntity } from './entities/teacher-notification.entity';
 import { RemedialStudentEntity } from './entities/remedial-student.entity';
+import { LessonRecapEntity } from './entities/lesson-recap.entity';
 import { TeacherService } from './teacher.service';
 import { TeacherController } from './teacher.controller';
 
@@ -40,6 +41,7 @@ import { TeacherController } from './teacher.controller';
       SharedResourceEntity,
       TeacherNotificationEntity,
       RemedialStudentEntity,
+      LessonRecapEntity,
     ]),
   ],
   providers: [TeacherService],

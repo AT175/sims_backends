@@ -1,4 +1,4 @@
-import { IsString, IsOptional, IsNumber, IsBoolean, IsArray, IsDateString } from 'class-validator';
+import { IsString, IsOptional, IsNumber, IsBoolean, IsArray, IsDateString, IsInt } from 'class-validator';
 
 // ── Lesson Plan ──
 export class CreateLessonPlanDto {
@@ -256,4 +256,40 @@ export class GESLessonPlanDto {
   @IsOptional() @IsString() teacherName?: string;
   @IsOptional() @IsString() objectives?: string;
   @IsOptional() @IsString() teachingStyle?: string;
+}
+
+// ── AI Assessment Generator ──
+export class GenerateAssessmentDto {
+  @IsString() classForm: string;
+  @IsString() subject: string;
+  @IsOptional() @IsString() topic?: string;
+  @IsOptional() @IsString() week?: string;
+  @IsOptional() @IsString() term?: string;
+  @IsOptional() @IsString() lessonPlanTopic?: string;
+  @IsOptional() @IsString() strand?: string;
+  @IsOptional() @IsString() subStrand?: string;
+  @IsOptional() @IsString() indicator?: string;
+  @IsString() assessmentType: string;    // Assignment | Quiz | Exam | Class Exercise | Homework
+  @IsOptional() @IsInt() questionCount?: number;
+  @IsOptional() @IsArray() formats?: string[];       // MCQ | True/False | Short Answer | Essay | Fill in the Blank
+  @IsOptional() @IsArray() cognitiveLevels?: string[];  // Recall | Comprehension | Application | Analysis | Evaluation | Synthesis
+  @IsOptional() @IsString() schoolName?: string;
+  @IsOptional() @IsString() teacherName?: string;
+  @IsOptional() @IsInt() duration?: number;
+  @IsOptional() @IsInt() maxScore?: number;
+}
+
+// ── Lesson Recap ──
+export class CreateLessonRecapDto {
+  @IsString() classForm: string;
+  @IsString() subject: string;
+  @IsString() topic: string;
+  @IsString() date: string;
+  @IsOptional() @IsString() week?: string;
+  @IsOptional() @IsString() term?: string;
+  @IsOptional() @IsString() keyPoints?: string;
+  @IsOptional() @IsString() activitiesDone?: string;
+  @IsOptional() @IsString() homework?: string;
+  @IsOptional() @IsString() nextLessonPreview?: string;
+  @IsOptional() @IsString() teacherNotes?: string;
 }

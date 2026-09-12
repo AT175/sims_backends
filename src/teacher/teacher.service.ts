@@ -20,9 +20,11 @@ import { CalendarEventEntity } from './entities/calendar-event.entity';
 import { SharedResourceEntity } from './entities/shared-resource.entity';
 import { TeacherNotificationEntity } from './entities/teacher-notification.entity';
 import { RemedialStudentEntity } from './entities/remedial-student.entity';
+import { LessonRecapEntity } from './entities/lesson-recap.entity';
 
 import * as dto from './teacher.dto';
 import { GESLessonPlanGenerator } from './ges-lesson-plan-generator';
+import { AssessmentGenerator } from './assessment-generator';
 
 function todayISO() { return new Date().toISOString().slice(0, 10); }
 
@@ -46,7 +48,11 @@ export class TeacherService {
     @InjectRepository(SharedResourceEntity) private sharedResourceRepo: Repository<SharedResourceEntity>,
     @InjectRepository(TeacherNotificationEntity) private notificationRepo: Repository<TeacherNotificationEntity>,
     @InjectRepository(RemedialStudentEntity) private remedialRepo: Repository<RemedialStudentEntity>,
+    @InjectRepository(LessonRecapEntity) private lessonRecapRepo: Repository<LessonRecapEntity>,
   ) {}
+
+  private gesGenerator = new GESLessonPlanGenerator();
+  private assessmentGen = new AssessmentGenerator();
 
   private getTeacherId(req: Request): string { return (req.user as any)?.userId || 'unknown'; }
 
@@ -319,7 +325,6 @@ export class TeacherService {
   }
 
   // ── AI Lesson Plan ──
-  private gesGenerator = new GESLessonPlanGenerator();
 
   async generateAILessonPlan(d: dto.AILessonPlanDto) {
     // Use the GES curriculum-aware generator
@@ -398,5 +403,62 @@ export class TeacherService {
 
   getGESWeekInfo(classKey: string, subject: string, week: number, term: number) {
     return this.gesGenerator.getWeekInfo(classKey, subject, week, term);
+  }
+
+  // ── AI Assessment Generator ──
+  async generateAssessment(d: dto.GenerateAssessmentDto, tenantId: string, teacherName: string) {
+    return this.assessmentGen.generate({
+      classForm: d.classForm,
+      subject: d.subject,
+      topic: d.topic,
+      week: d.week,
+      term: d.term,
+      lessonPlanTopic: d.lessonPlanTopic,
+      strand: d.strand,
+      subStrand: d.subStrand,
+      indicator: d.indicator,
+      assessmentType: d.assessmentType as any,
+      questionCount: d.questionCount || 10,
+      formats: (d.formats || ['MCQ']) as any,
+      cognitiveLevels: (d.cognitiveLevels || ['Recall']) as any,
+      schoolName: d.schoolName,
+      teacherName: d.teacherName || teacherName,
+      duration: d.duration,
+      maxScore: d.maxScore,
+    });
+  }
+
+  // ── Lesson Recap ──
+  async createLessonRecap(d: dto.CreateLessonRecapDto, tenantId: string, teacherId: string, teacherName: string) {
+    const recap = this.lessonRecapRepo.create({
+      ...d,
+      tenantId,
+      teacherId,
+      teacherName,
+    });
+    return this.lessonRecapRepo.save(recap);
+  }
+
+  async getLessonRecaps(tenantId: string, classForm?: string) {
+    const where: any = { tenantId };
+    if (classForm) where.classForm = classForm;
+    return this.lessonRecapRepo.find({ where, order: { createdAt: 'DESC' as any } });
+  }
+
+  async getLessonRecapsForClass(tenantId: string, classForm: string) {
+    return this.lessonRecapRepo.find({ where: { tenantId, classForm }, order: { date: 'DESC' as any } });
+  }
+
+  // ── Published assignments for students/parents ──
+  async getPublishedAssignments(tenantId: string, classForm?: string) {
+    const where: any = { tenantId, status: 'Published' };
+    if (classForm) where.classForm = classForm;
+    return this.assignmentRepo.find({ where, order: { createdAt: 'DESC' as any } });
+  }
+
+  async getPublishedQuizzes(tenantId: string, classForm?: string) {
+    const where: any = { tenantId, status: 'Published' };
+    if (classForm) where.classForm = classForm;
+    return this.quizRepo.find({ where, order: { createdAt: 'DESC' as any } });
   }
 }

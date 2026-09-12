@@ -19,6 +19,8 @@ import { LiveSessionEntity } from '../teacher/entities/live-session.entity';
 import { AVRecordingEntity } from '../teacher/entities/av-recording.entity';
 import { SharedResourceEntity } from '../teacher/entities/shared-resource.entity';
 import { QuizEntity } from '../teacher/entities/quiz.entity';
+import { AssignmentEntity } from '../teacher/entities/assignment.entity';
+import { LessonRecapEntity } from '../teacher/entities/lesson-recap.entity';
 import * as dto from './student.dto';
 
 @Injectable()
@@ -42,6 +44,8 @@ export class StudentService {
     @InjectRepository(AVRecordingEntity) private avRecordingRepo: Repository<AVRecordingEntity>,
     @InjectRepository(SharedResourceEntity) private sharedResourceRepo: Repository<SharedResourceEntity>,
     @InjectRepository(QuizEntity) private quizRepo: Repository<QuizEntity>,
+    @InjectRepository(AssignmentEntity) private assignmentRepo: Repository<AssignmentEntity>,
+    @InjectRepository(LessonRecapEntity) private lessonRecapRepo: Repository<LessonRecapEntity>,
   ) {}
 
   private async getStudent(userId: string, tenantId: string): Promise<Student> {
@@ -237,6 +241,52 @@ export class StudentService {
       order: { createdAt: 'DESC' },
     });
     return all.filter((q) => q.classForm === student.classSectionId || q.classForm === 'All' || q.classForm === 'General');
+  }
+
+  // ── Published Assignments (for students to see what to do) ──
+  async getPublishedAssignments(userId: string, tenantId: string) {
+    const student = await this.getStudent(userId, tenantId);
+    const all = await this.assignmentRepo.find({
+      where: { tenantId, status: 'Published' },
+      order: { createdAt: 'DESC' },
+    });
+    return all.filter((a) => a.classForm === student.classSectionId || a.classForm === 'All' || a.classForm === 'General');
+  }
+
+  // ── Lesson Recaps (daily lesson summary for students/parents) ──
+  async getLessonRecaps(userId: string, tenantId: string) {
+    const student = await this.getStudent(userId, tenantId);
+    return this.lessonRecapRepo.find({
+      where: { tenantId, classForm: student.classSectionId },
+      order: { date: 'DESC' },
+      take: 30,
+    });
+  }
+
+  // ── Ward data for parents (assignments, quizzes, recaps, results) ──
+  async getWardAcademicData(studentId: string, tenantId: string) {
+    const student = await this.studentRepo.findOne({ where: { id: studentId, tenantId } });
+    if (!student) throw new NotFoundException('Student not found');
+
+    const [assignments, quizzes, recaps, results, attendance] = await Promise.all([
+      this.assignmentRepo.find({ where: { tenantId, status: 'Published' }, order: { createdAt: 'DESC' } }),
+      this.quizRepo.find({ where: { tenantId, status: 'Published' }, order: { createdAt: 'DESC' } }),
+      this.lessonRecapRepo.find({ where: { tenantId, classForm: student.classSectionId }, order: { date: 'DESC' }, take: 30 }),
+      this.resultRepo.find({ where: { studentId, tenantId }, order: { term: 'DESC' } }),
+      this.attendanceRepo.find({ where: { studentId, tenantId }, order: { date: 'DESC' }, take: 30 }),
+    ]);
+
+    const classAssignments = assignments.filter((a) => a.classForm === student.classSectionId || a.classForm === 'All');
+    const classQuizzes = quizzes.filter((q) => q.classForm === student.classSectionId || q.classForm === 'All');
+
+    return {
+      student: { id: student.id, name: `${student.firstName} ${student.lastName}`, classSectionId: student.classSectionId },
+      assignments: classAssignments,
+      quizzes: classQuizzes,
+      lessonRecaps: recaps,
+      results,
+      attendance,
+    };
   }
 
   // ── House Info ──
