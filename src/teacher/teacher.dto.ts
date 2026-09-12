@@ -227,4 +227,33 @@ export class AILessonPlanDto {
   @IsOptional() @IsString() duration?: string;
   @IsOptional() @IsString() objectives?: string;
   @IsOptional() @IsString() teachingStyle?: string;
+  @IsOptional() @IsString() week?: string;
+  @IsOptional() @IsString() term?: string;
+  @IsOptional() @IsString() schoolName?: string;
+  @IsOptional() @IsString() district?: string;
+  @IsOptional() @IsString() region?: string;
+  @IsOptional() @IsString() teacherName?: string;
+}
+
+export class RefineLessonPlanDto {
+  @IsString() lessonPlan: string;
+  @IsString() instruction: string;
+  @IsOptional() @IsString() subject?: string;
+  @IsOptional() @IsString() classForm?: string;
+  @IsOptional() @IsString() topic?: string;
+}
+
+export class GESLessonPlanDto {
+  @IsString() classForm: string;
+  @IsString() subject: string;
+  @IsString() week: string;
+  @IsOptional() @IsString() term?: string;
+  @IsOptional() @IsString() topic?: string;
+  @IsOptional() @IsString() duration?: string;
+  @IsOptional() @IsString() schoolName?: string;
+  @IsOptional() @IsString() district?: string;
+  @IsOptional() @IsString() region?: string;
+  @IsOptional() @IsString() teacherName?: string;
+  @IsOptional() @IsString() objectives?: string;
+  @IsOptional() @IsString() teachingStyle?: string;
 }

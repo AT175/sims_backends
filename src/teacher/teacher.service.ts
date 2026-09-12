@@ -22,6 +22,7 @@ import { TeacherNotificationEntity } from './entities/teacher-notification.entit
 import { RemedialStudentEntity } from './entities/remedial-student.entity';
 
 import * as dto from './teacher.dto';
+import { GESLessonPlanGenerator } from './ges-lesson-plan-generator';
 
 function todayISO() { return new Date().toISOString().slice(0, 10); }
 
@@ -318,19 +319,84 @@ export class TeacherService {
   }
 
   // ── AI Lesson Plan ──
+  private gesGenerator = new GESLessonPlanGenerator();
+
   async generateAILessonPlan(d: dto.AILessonPlanDto) {
-    // Built-in generator (no external AI API configured)
+    // Use the GES curriculum-aware generator
+    const plan = this.gesGenerator.generate({
+      classForm: d.classForm,
+      subject: d.subject,
+      week: d.week || '1',
+      term: '1',
+      topic: d.topic,
+      duration: d.duration,
+      schoolName: d.schoolName,
+      district: d.district,
+      region: d.region,
+      teacherName: d.teacherName,
+      objectives: d.objectives,
+      teachingStyle: d.teachingStyle,
+    });
     return {
-      objectives: `By the end of the lesson, students should be able to understand and apply concepts related to ${d.topic} in ${d.subject}.`,
+      objectives: plan.learningObjectives,
       teachingMethods: d.teachingStyle || 'Direct instruction with guided practice, group work, and interactive discussion',
-      resources: 'Textbook, whiteboard, markers, prepared worksheets, projector (if available)',
-      activities: `1. Introduction: Review previous lesson and introduce ${d.topic}\n2. Direct instruction: Explain key concepts with examples\n3. Guided practice: Work through examples together\n4. Independent practice: Students work on exercises\n5. Review and summary`,
-      assessment: 'Oral questioning during lesson, exit ticket with 2-3 questions on the topic',
-      homework: `Exercise problems on ${d.topic} from textbook`,
-      introduction: `Begin with a real-world connection to ${d.topic}. Ask students what they already know. State the lesson objectives clearly.`,
-      mainActivity: `Step-by-step explanation of ${d.topic} with worked examples. Break down complex concepts into manageable parts. Use the ${d.teachingStyle || 'direct instruction'} approach.`,
-      conclusion: 'Summarize key points. Ask students to share one thing they learned. Preview the next lesson topic.',
-      differentiation: 'Provide additional support for struggling students through simplified examples. Challenge advanced students with extension problems.',
+      resources: plan.teachingLearningResources.join(', '),
+      activities: plan.mainActivity,
+      assessment: plan.assessment,
+      homework: plan.homework,
+      introduction: plan.starter,
+      mainActivity: plan.mainActivity,
+      conclusion: plan.plenary,
+      differentiation: plan.differentiation,
+      // GES-specific fields
+      gesFormat: plan.rawContent,
+      strand: plan.strand,
+      subStrand: plan.subStrand,
+      indicator: plan.indicator,
+      coreCompetencies: plan.coreCompetencies,
+      week: plan.week,
+      term: plan.term,
+      date: plan.date,
+      duration: plan.duration,
+      schoolName: plan.schoolName,
+      classForm: plan.classForm,
     };
+  }
+
+  async generateGESLessonPlan(d: dto.GESLessonPlanDto) {
+    return this.gesGenerator.generate({
+      classForm: d.classForm,
+      subject: d.subject,
+      week: d.week,
+      term: d.term || '1',
+      topic: d.topic,
+      duration: d.duration,
+      schoolName: d.schoolName,
+      district: d.district,
+      region: d.region,
+      teacherName: d.teacherName,
+      objectives: d.objectives,
+      teachingStyle: d.teachingStyle,
+    });
+  }
+
+  async refineLessonPlan(d: dto.RefineLessonPlanDto) {
+    return this.gesGenerator.refine(d.lessonPlan, d.instruction, {
+      subject: d.subject,
+      classForm: d.classForm,
+      topic: d.topic,
+    });
+  }
+
+  getGESClassLevels() {
+    return this.gesGenerator.getClassLevels();
+  }
+
+  getGESSubjects(classKey: string) {
+    return this.gesGenerator.getSubjects(classKey);
+  }
+
+  getGESWeekInfo(classKey: string, subject: string, week: number, term: number) {
+    return this.gesGenerator.getWeekInfo(classKey, subject, week, term);
   }
 }

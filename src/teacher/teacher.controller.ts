@@ -123,4 +123,9 @@ export class TeacherController {
 
   // ── AI Lesson Plan ──
   @Post('ai-lesson-plan') async generateAILessonPlan(@Body() d: dto.AILessonPlanDto) { return this.svc.generateAILessonPlan(d); }
+  @Post('ai-lesson-plan/ges') async generateGESLessonPlan(@Body() d: dto.GESLessonPlanDto) { return this.svc.generateGESLessonPlan(d); }
+  @Post('ai-lesson-plan/refine') async refineLessonPlan(@Body() d: dto.RefineLessonPlanDto) { return this.svc.refineLessonPlan(d); }
+  @Get('ai-lesson-plan/class-levels') async getGESClassLevels() { return this.svc.getGESClassLevels(); }
+  @Get('ai-lesson-plan/subjects') async getGESSubjects(@Query('classKey') classKey: string) { return this.svc.getGESSubjects(classKey); }
+  @Get('ai-lesson-plan/week-info') async getGESWeekInfo(@Query('classKey') classKey: string, @Query('subject') subject: string, @Query('week') week: number, @Query('term') term: number) { return this.svc.getGESWeekInfo(classKey, subject, week, term); }
 }
