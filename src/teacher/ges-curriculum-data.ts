@@ -24,7 +24,7 @@ export interface GESSubject {
 export interface GESClassLevel {
   key: string;
   label: string;
-  level: 'kg' | 'primary' | 'jhs';
+  level: 'kg' | 'primary' | 'jhs' | 'shs';
   subjects: GESSubject[];
 }
 
@@ -82,6 +82,24 @@ export const TLMS_BY_SUBJECT: Record<string, string[]> = {
   'Social Studies': ['Map of Ghana', 'Globe', 'Charts of governance', 'Pictures of leaders', 'Newspaper clippings'],
   'Career Technology': ['Tools (hammer, saw, sewing machine)', 'Materials (wood, fabric, food items)', 'Safety gear', 'Charts of processes'],
   'Creative Arts and Design': ['Drawing materials', 'Paint', 'Brushes', 'Clay', 'Fabric', 'Recycled materials', 'Design charts'],
+  // SHS subjects (note: 'English Language' TLM above covers both basic and SHS)
+  'Mathematics (Core)': ['Scientific calculator', 'Graph book', 'Mathematical set', 'Textbook', 'Past WASSCE questions', 'Whiteboard and markers', 'Worksheets'],
+  'Integrated Science (Core)': ['Textbook', 'Laboratory equipment', 'Charts and diagrams', 'Specimens', 'Microscope', 'Chemicals and reagents', 'Past WASSCE questions'],
+  'Social Studies (Core)': ['Textbook', 'Map of Ghana', 'Constitution of Ghana', 'Newspapers', 'Charts', 'Past WASSCE questions', 'Documentaries'],
+  'Information and Communication Technology (Core)': ['Computers/laptops', 'Projector', 'Internet access', 'Software (Office suite)', 'Textbook', 'Storage devices', 'Past WASSCE questions'],
+  'Physics (Elective)': ['Textbook', 'Laboratory apparatus', 'Circuit boards', 'Multimeters', 'Weights and pulleys', 'Lenses and mirrors', 'Scientific calculator', 'Past WASSCE questions'],
+  'Chemistry (Elective)': ['Textbook', 'Laboratory apparatus', 'Chemicals and reagents', 'Periodic table chart', 'Molecular model kits', 'pH meters and indicators', 'Past WASSCE questions'],
+  'Biology (Elective)': ['Textbook', 'Microscope', 'Slides and cover slips', 'Specimens (plants and animals)', 'Charts and models', 'Dissection kits', 'Past WASSCE questions'],
+  'Economics (Elective)': ['Textbook', 'Economic journals', 'Graph paper', 'Calculator', 'Newspapers', 'Past WASSCE questions', 'Statistical data'],
+  'Government (Elective)': ['Textbook', 'Constitution of Ghana', 'Political maps', 'Newspapers', 'Documentaries', 'Past WASSCE questions', 'Charts of government structure'],
+  'Literature in English (Elective)': ['Set texts (prose, poetry, drama)', 'Textbook', 'Literary handbooks', 'Dictionaries', 'Past WASSCE questions', 'Notebooks for analysis'],
+  'Geography (Elective)': ['Textbook', 'Topographical maps', 'Atlas', 'Globe', 'Graph paper', 'Geographical instruments', 'Past WASSCE questions'],
+  'Accounting (Elective)': ['Textbook', 'Calculator', 'Ledger paper', 'Past WASSCE questions', 'Spreadsheet software', 'Sample financial statements', 'Worksheets'],
+  'Business Management (Elective)': ['Textbook', 'Case studies', 'Business journals', 'Past WASSCE questions', 'Charts', 'Sample business plans'],
+  'History (Elective)': ['Textbook', 'Historical maps', 'Timelines', 'Documentaries', 'Primary source documents', 'Past WASSCE questions', 'Charts'],
+  'French (Elective)': ['Textbook', 'French dictionaries', 'Audio recordings', 'French literature', 'Flash cards', 'Past WASSCE questions', 'French newspapers/magazines'],
+  'Elective Mathematics': ['Scientific calculator', 'Graph book', 'Mathematical set', 'Textbook', 'Past WASSCE questions', 'Whiteboard and markers', 'Worksheets'],
+  'Physical Education (Core)': ['Sports equipment (balls, bats, rackets)', 'Stopwatch', 'Whistle', 'Measuring tape', 'First aid kit', 'Open field/court', 'Charts of rules'],
 };
 
 // ── Class Levels with Subjects and Strands ──
@@ -1589,6 +1607,875 @@ export const GES_CURRICULUM: GESClassLevel[] = [
             subStrands: [
               { name: 'Programming Basics', indicator: 'B9.7.1.1.1', content: 'Introduction to programming. Algorithms. Flowcharts. Basic coding (Scratch/Python).' },
               { name: 'Web Development Basics', indicator: 'B9.7.1.2.1', content: 'HTML basics. CSS basics. Creating simple web pages.' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // ── SHS 1 (Senior High School Year 1) ──
+  {
+    key: 'shs1',
+    label: 'SHS 1',
+    level: 'shs',
+    subjects: [
+      {
+        name: 'English Language',
+        strands: [
+          {
+            name: 'Oral Language',
+            subStrands: [
+              { name: 'Listening Comprehension', indicator: 'SHS1.ENG.1.1', content: 'Listening for main ideas, supporting details, and implied meanings in speeches, lectures, and broadcasts. Note-taking skills.' },
+              { name: 'Speaking and Oral Presentation', indicator: 'SHS1.ENG.1.2', content: 'Oral presentations, debates, panel discussions. Pronunciation, intonation, and stress. Public speaking skills.' },
+            ],
+          },
+          {
+            name: 'Reading and Comprehension',
+            subStrands: [
+              { name: 'Reading Literature', indicator: 'SHS1.ENG.2.1', content: 'Prose, poetry, and drama analysis. Literary devices. African and Ghanaian literature. Character analysis, theme, plot.' },
+              { name: 'Reading Comprehension', indicator: 'SHS1.ENG.2.2', content: 'Skimming, scanning, inferential reading. Vocabulary in context. Author\'s purpose and tone. Critical reading.' },
+            ],
+          },
+          {
+            name: 'Writing',
+            subStrands: [
+              { name: 'Composition Writing', indicator: 'SHS1.ENG.3.1', content: 'Narrative, descriptive, expository, argumentative essays. Letter writing (formal and informal). Report writing. Summary writing.' },
+              { name: 'Grammar and Usage', indicator: 'SHS1.ENG.3.2', content: 'Parts of speech, sentence structure, clauses, subject-verb agreement. Active and passive voice. Direct and indirect speech. Punctuation.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Mathematics (Core)',
+        strands: [
+          {
+            name: 'Number and Numeration',
+            subStrands: [
+              { name: 'Number Systems', indicator: 'SHS1.MATH.1.1', content: 'Real number system. Rational and irrational numbers. Indices and logarithms. Surds. Modular arithmetic.' },
+              { name: 'Sets and Operations', indicator: 'SHS1.MATH.1.2', content: 'Sets, subsets, universal set. Union, intersection, complement. Venn diagrams and applications. Set builder notation.' },
+            ],
+          },
+          {
+            name: 'Algebra',
+            subStrands: [
+              { name: 'Algebraic Expressions', indicator: 'SHS1.MATH.2.1', content: 'Simplifying algebraic expressions. Factorisation. Algebraic fractions. Linear equations and inequalities. Quadratic equations.' },
+              { name: 'Relations and Functions', indicator: 'SHS1.MATH.2.2', content: 'Relations, domain and range. Functions (linear, quadratic). Graphs of functions. Function notation.' },
+            ],
+          },
+          {
+            name: 'Geometry and Trigonometry',
+            subStrands: [
+              { name: 'Plane Geometry', indicator: 'SHS1.MATH.3.1', content: 'Angles, triangles, polygons. Properties of circles. Construction. Loci. Coordinate geometry (distance, midpoint, gradient).' },
+              { name: 'Trigonometry', indicator: 'SHS1.MATH.3.2', content: 'Trigonometric ratios (sine, cosine, tangent). Angles of elevation and depression. Sine and cosine rules. Bearings.' },
+            ],
+          },
+          {
+            name: 'Statistics and Probability',
+            subStrands: [
+              { name: 'Data Handling', indicator: 'SHS1.MATH.4.1', content: 'Collection, organisation, and presentation of data. Measures of central tendency (mean, median, mode). Measures of dispersion.' },
+              { name: 'Probability', indicator: 'SHS1.MATH.4.2', content: 'Basic probability concepts. Experimental and theoretical probability. Sample space. Simple events. Tree diagrams.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Integrated Science (Core)',
+        strands: [
+          {
+            name: 'Diversity of Matter',
+            subStrands: [
+              { name: 'Cells and Living Organisms', indicator: 'SHS1.SCI.1.1', content: 'Cell theory. Plant and animal cell structure. Levels of organisation. Cell division (mitosis, meiosis). Transport across cell membrane.' },
+              { name: 'Classification of Organisms', indicator: 'SHS1.SCI.1.2', content: 'Five-kingdom classification. Characteristics of kingdoms. Binomial nomenclature. Keys for identification.' },
+            ],
+          },
+          {
+            name: 'Cycles',
+            subStrands: [
+              { name: 'Life Cycles and Reproduction', indicator: 'SHS1.SCI.2.1', content: 'Reproduction in plants (vegetative, sexual). Reproduction in animals. Life cycles of selected organisms. Reproductive health.' },
+              { name: 'The Cell Cycle', indicator: 'SHS1.SCI.2.2', content: 'Mitosis and meiosis. Chromosomes and genes. DNA structure basics. Inheritance patterns.' },
+            ],
+          },
+          {
+            name: 'Systems',
+            subStrands: [
+              { name: 'Human Body Systems', indicator: 'SHS1.SCI.3.1', content: 'Digestive system. Respiratory system. Circulatory system. Excretory system. Nervous system. Coordination and response.' },
+              { name: 'Plant Systems', indicator: 'SHS1.SCI.3.2', content: 'Transport in plants (xylem, phloem). Photosynthesis. Plant nutrition. Plant responses.' },
+            ],
+          },
+          {
+            name: 'Energy and Matter',
+            subStrands: [
+              { name: 'Matter and Its Properties', indicator: 'SHS1.SCI.4.1', content: 'States of matter. Atomic structure. Periodic table. Chemical bonding (ionic, covalent). Chemical equations. Acids, bases, and salts.' },
+              { name: 'Energy Sources', indicator: 'SHS1.SCI.4.2', content: 'Forms of energy. Energy transformations. Renewable and non-renewable energy. Heat transfer. Electricity and circuits.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Social Studies (Core)',
+        strands: [
+          {
+            name: 'Self-Awareness and Citizenship',
+            subStrands: [
+              { name: 'Adolescent Development', indicator: 'SHS1.SOC.1.1', content: 'Physical, emotional, and social changes in adolescence. Self-awareness and self-esteem. Goal setting. Time management.' },
+              { name: 'Citizenship and National Identity', indicator: 'SHS1.SOC.1.2', content: 'Rights and responsibilities of citizens. National symbols and values. The Constitution of Ghana. Civic duties.' },
+            ],
+          },
+          {
+            name: 'Governance and Politics',
+            subStrands: [
+              { name: 'Government of Ghana', indicator: 'SHS1.SOC.2.1', content: 'Three arms of government (Executive, Legislature, Judiciary). Local government system. Traditional authority. Chieftaincy.' },
+              { name: 'Democracy and Elections', indicator: 'SHS1.SOC.2.2', content: 'Democratic principles. Electoral process in Ghana. Political parties. Voting rights. Peaceful coexistence.' },
+            ],
+          },
+          {
+            name: 'Economic Activities',
+            subStrands: [
+              { name: 'Production and Distribution', indicator: 'SHS1.SOC.3.1', content: 'Factors of production. Types of economic systems. Business ownership. Distribution of goods and services. Entrepreneurship.' },
+              { name: 'Resources and Development', indicator: 'SHS1.SOC.3.2', content: 'Natural, human, and capital resources. Sustainable development. Environmental conservation. Economic growth.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Information and Communication Technology (Core)',
+        strands: [
+          {
+            name: 'Computer Systems',
+            subStrands: [
+              { name: 'Computer Hardware and Software', indicator: 'SHS1.ICT.1.1', content: 'Components of a computer system. Input, output, storage, and processing devices. System software vs application software. Computer architecture.' },
+              { name: 'Computer Networks', indicator: 'SHS1.ICT.1.2', content: 'Types of networks (LAN, WAN, MAN). Network topologies. Internet and intranet. Network security basics.' },
+            ],
+          },
+          {
+            name: 'Productivity Software',
+            subStrands: [
+              { name: 'Word Processing', indicator: 'SHS1.ICT.2.1', content: 'Creating, formatting, and editing documents. Tables, columns, and mail merge. Templates and styles.' },
+              { name: 'Spreadsheets', indicator: 'SHS1.ICT.2.2', content: 'Entering and formatting data. Formulas and functions. Charts and graphs. Data analysis.' },
+              { name: 'Presentations', indicator: 'SHS1.ICT.2.3', content: 'Creating slide presentations. Adding multimedia. Transitions and animations. Delivering presentations.' },
+            ],
+          },
+          {
+            name: 'Internet and Web',
+            subStrands: [
+              { name: 'Internet Safety and Ethics', indicator: 'SHS1.ICT.3.1', content: 'Safe browsing practices. Cybersecurity. Privacy and data protection. Cyberbullying. Computer ethics and intellectual property.' },
+              { name: 'Web Development Basics', indicator: 'SHS1.ICT.3.2', content: 'HTML basics. CSS basics. Creating simple web pages. Web hosting concepts.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Physics (Elective)',
+        strands: [
+          {
+            name: 'Mechanics',
+            subStrands: [
+              { name: 'Motion', indicator: 'SHS1.PHY.1.1', content: 'Distance, displacement, speed, velocity, acceleration. Equations of motion. Motion graphs. Projectiles.' },
+              { name: 'Forces', indicator: 'SHS1.PHY.1.2', content: 'Types of forces. Newton\'s laws of motion. Friction. Momentum and impulse. Equilibrium.' },
+            ],
+          },
+          {
+            name: 'Energy',
+            subStrands: [
+              { name: 'Work, Energy and Power', indicator: 'SHS1.PHY.2.1', content: 'Work done. Kinetic and potential energy. Conservation of energy. Power. Efficiency of machines.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Chemistry (Elective)',
+        strands: [
+          {
+            name: 'Atomic Structure and Bonding',
+            subStrands: [
+              { name: 'Atomic Structure', indicator: 'SHS1.CHEM.1.1', content: 'Subatomic particles. Atomic number and mass number. Isotopes. Electronic configuration. Periodic table trends.' },
+              { name: 'Chemical Bonding', indicator: 'SHS1.CHEM.1.2', content: 'Ionic bonding. Covalent bonding. Metallic bonding. Intermolecular forces. Shapes of molecules.' },
+            ],
+          },
+          {
+            name: 'Chemical Reactions',
+            subStrands: [
+              { name: 'Chemical Equations and Stoichiometry', indicator: 'SHS1.CHEM.2.1', content: 'Balancing chemical equations. Mole concept. Stoichiometric calculations. Limiting reagents. Percentage yield.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Biology (Elective)',
+        strands: [
+          {
+            name: 'Cell Biology',
+            subStrands: [
+              { name: 'Cell Structure and Function', indicator: 'SHS1.BIO.1.1', content: 'Microscopy. Cell organelles and functions. Prokaryotic vs eukaryotic cells. Cell specialisation. Tissues and organs.' },
+              { name: 'Cell Transport', indicator: 'SHS1.BIO.1.2', content: 'Diffusion, osmosis, active transport. Facilitated diffusion. Endocytosis and exocytosis. Water potential.' },
+            ],
+          },
+          {
+            name: 'Nutrition',
+            subStrands: [
+              { name: 'Nutrition in Plants and Animals', indicator: 'SHS1.BIO.2.1', content: 'Photosynthesis. Plant nutrition. Human digestive system. Balanced diet. Nutritional deficiencies and disorders.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Economics (Elective)',
+        strands: [
+          {
+            name: 'Basic Economic Concepts',
+            subStrands: [
+              { name: 'Scope of Economics', indicator: 'SHS1.ECON.1.1', content: 'Definition of economics. Scarcity, choice, and opportunity cost. Production possibility curves. Economic systems.' },
+              { name: 'Demand and Supply', indicator: 'SHS1.ECON.1.2', content: 'Law of demand. Law of supply. Market equilibrium. Elasticity of demand and supply. Factors affecting demand and supply.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Government (Elective)',
+        strands: [
+          {
+            name: 'Political Institutions',
+            subStrands: [
+              { name: 'Basic Concepts of Government', indicator: 'SHS1.GOV.1.1', content: 'Definition of government. Functions of government. Forms of government (democracy, monarchy, dictatorship). State and nation.' },
+              { name: 'Constitutions', indicator: 'SHS1.GOV.1.2', content: 'Definition and types of constitutions. Written vs unwritten. Rigid vs flexible. The 1992 Constitution of Ghana.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Literature in English (Elective)',
+        strands: [
+          {
+            name: 'Literary Analysis',
+            subStrands: [
+              { name: 'Introduction to Literature', indicator: 'SHS1.LIT.1.1', content: 'What is literature? Genres of literature (prose, poetry, drama). Literary terms and devices. Approaches to literary analysis.' },
+              { name: 'African Literature', indicator: 'SHS1.LIT.1.2', content: 'Themes in African literature. Major African writers. Ghanaian literature. Oral literature traditions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Geography (Elective)',
+        strands: [
+          {
+            name: 'Physical Geography',
+            subStrands: [
+              { name: 'The Earth', indicator: 'SHS1.GEO.1.1', content: 'Earth structure. Rocks and minerals. Earth movements (plate tectonics, earthquakes, volcanoes). Weathering and erosion.' },
+              { name: 'Climate and Vegetation', indicator: 'SHS1.GEO.1.2', content: 'Climate elements and factors. Climate types. Vegetation zones. Human impact on climate and vegetation.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Accounting (Elective)',
+        strands: [
+          {
+            name: 'Book-Keeping and Accounting',
+            subStrands: [
+              { name: 'Introduction to Accounting', indicator: 'SHS1.ACC.1.1', content: 'Purpose of accounting. Users of accounting information. Accounting concepts and conventions. The accounting equation.' },
+              { name: 'Books of Original Entry', indicator: 'SHS1.ACC.1.2', content: 'Journals. Cash book. Petty cash book. Ledger accounts. Trial balance. Double-entry bookkeeping.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Business Management (Elective)',
+        strands: [
+          {
+            name: 'Business Organisation',
+            subStrands: [
+              { name: 'Introduction to Business', indicator: 'SHS1.BM.1.1', content: 'Types of business organisations. Sole proprietorship, partnership, companies. Business objectives. Stakeholders.' },
+              { name: 'Management Principles', indicator: 'SHS1.BM.1.2', content: 'Functions of management (planning, organising, directing, controlling). Leadership styles. Motivation. Delegation.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'History (Elective)',
+        strands: [
+          {
+            name: 'Ghana Through Time',
+            subStrands: [
+              { name: 'Pre-Colonial Ghana', indicator: 'SHS1.HIS.1.1', content: 'Early inhabitants of Ghana. Migrations and settlements. Traditional political systems. Economic activities before colonialism.' },
+              { name: 'Colonial Rule', indicator: 'SHS1.HIS.1.2', content: 'Arrival of Europeans. British colonisation. Indirect rule. Nationalist movements. Independence in 1957.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'French (Elective)',
+        strands: [
+          {
+            name: 'Language Skills',
+            subStrands: [
+              { name: 'Listening and Speaking', indicator: 'SHS1.FR.1.1', content: 'Basic French pronunciation. Greetings and introductions. Everyday conversations. Listening comprehension in French.' },
+              { name: 'Reading and Writing', indicator: 'SHS1.FR.1.2', content: 'Reading simple French texts. French grammar basics (articles, nouns, adjectives, verbs). Writing short compositions in French.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Physical Education (Core)',
+        strands: [
+          {
+            name: 'Physical Fitness and Health',
+            subStrands: [
+              { name: 'Physical Fitness', indicator: 'SHS1.PE.1.1', content: 'Components of physical fitness. Fitness testing. Exercise programmes. Health-related fitness. Warm-up and cool-down.' },
+              { name: 'Sports and Games', indicator: 'SHS1.PE.1.2', content: 'Athletics (track and field). Football, basketball, volleyball. Rules and regulations. Skill development. Teamwork and sportsmanship.' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // ── SHS 2 (Senior High School Year 2) ──
+  {
+    key: 'shs2',
+    label: 'SHS 2',
+    level: 'shs',
+    subjects: [
+      {
+        name: 'English Language',
+        strands: [
+          {
+            name: 'Oral Language',
+            subStrands: [
+              { name: 'Advanced Listening and Speaking', indicator: 'SHS2.ENG.1.1', content: 'Critical listening to complex texts. Debating and argumentation. Interview techniques. Oral interpretation of literature.' },
+            ],
+          },
+          {
+            name: 'Reading and Comprehension',
+            subStrands: [
+              { name: 'Literary Analysis', indicator: 'SHS2.ENG.2.1', content: 'In-depth analysis of set texts. Character, theme, style, and setting. Comparative literature. Shakespeare (selected works).' },
+              { name: 'Critical Reading', indicator: 'SHS2.ENG.2.2', content: 'Analysing arguments. Fact vs opinion. Evaluating evidence. Reading for research. Synthesising multiple sources.' },
+            ],
+          },
+          {
+            name: 'Writing',
+            subStrands: [
+              { name: 'Advanced Composition', indicator: 'SHS2.ENG.3.1', content: 'Advanced essay writing (argumentative, persuasive, reflective). Research papers. Creative writing (short stories, poetry). Article writing.' },
+              { name: 'Advanced Grammar', indicator: 'SHS2.ENG.3.2', content: 'Complex sentence structures. Clauses and phrases. Register and style. Common errors. Editing and proofreading.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Mathematics (Core)',
+        strands: [
+          {
+            name: 'Algebra and Calculus',
+            subStrands: [
+              { name: 'Advanced Algebra', indicator: 'SHS2.MATH.1.1', content: 'Quadratic equations and functions. Polynomials. Simultaneous equations. Inequalities. Logarithmic and exponential functions.' },
+              { name: 'Introduction to Calculus', indicator: 'SHS2.MATH.1.2', content: 'Limits and continuity. Differentiation from first principles. Rules of differentiation. Applications of derivatives (rates of change, maxima and minima).' },
+            ],
+          },
+          {
+            name: 'Geometry and Trigonometry',
+            subStrands: [
+              { name: 'Coordinate Geometry', indicator: 'SHS2.MATH.2.1', content: 'Equation of a line. Equation of a circle. Conic sections (parabola, ellipse, hyperbola). Transformations.' },
+              { name: 'Advanced Trigonometry', indicator: 'SHS2.MATH.2.2', content: 'Trigonometric identities. Trigonometric equations. Inverse trigonometric functions. Compound and multiple angles.' },
+            ],
+          },
+          {
+            name: 'Statistics and Probability',
+            subStrands: [
+              { name: 'Advanced Statistics', indicator: 'SHS2.MATH.3.1', content: 'Correlation and regression. Binomial distribution. Normal distribution. Hypothesis testing basics.' },
+              { name: 'Probability', indicator: 'SHS2.MATH.3.2', content: 'Conditional probability. Permutations and combinations. Probability distributions. Bayes\' theorem.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Integrated Science (Core)',
+        strands: [
+          {
+            name: 'Systems and Processes',
+            subStrands: [
+              { name: 'Human Anatomy and Physiology', indicator: 'SHS2.SCI.1.1', content: 'Skeletal and muscular systems. Nervous and endocrine systems. Immune system. Homeostasis. Diseases and immunity.' },
+              { name: 'Plant Physiology', indicator: 'SHS2.SCI.1.2', content: 'Photosynthesis (light and dark reactions). Plant hormones. Plant growth and development. Plant reproduction.' },
+            ],
+          },
+          {
+            name: 'Chemistry of Matter',
+            subStrands: [
+              { name: 'Chemical Reactions', indicator: 'SHS2.SCI.2.1', content: 'Types of chemical reactions. Rates of reaction. Chemical equilibrium. Electrochemistry. Oxidation and reduction.' },
+              { name: 'Acids, Bases and Salts', indicator: 'SHS2.SCI.2.2', content: 'pH scale. Acid-base titrations. Indicators. Salt preparation. Buffer solutions. Industrial applications.' },
+            ],
+          },
+          {
+            name: 'Physics and Energy',
+            subStrands: [
+              { name: 'Electricity and Magnetism', indicator: 'SHS2.SCI.3.1', content: 'Electric circuits (series and parallel). Ohm\'s law. Electrical power and energy. Electromagnetism. Electromagnetic induction.' },
+              { name: 'Waves and Optics', indicator: 'SHS2.SCI.3.2', content: 'Wave properties. Sound waves. Light waves. Reflection and refraction. Lenses and optical instruments.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Social Studies (Core)',
+        strands: [
+          {
+            name: 'National Development',
+            subStrands: [
+              { name: 'Economic Development', indicator: 'SHS2.SOC.1.1', content: 'Economic growth and development. National income. Budget and taxation. International trade. Balance of payments.' },
+              { name: 'Social Development', indicator: 'SHS2.SOC.1.2', content: 'Education and health. Population and development. Urbanisation. Social services. Poverty and inequality.' },
+            ],
+          },
+          {
+            name: 'International Relations',
+            subStrands: [
+              { name: 'Ghana in the International Community', indicator: 'SHS2.SOC.2.1', content: 'Ghana and the UN. African Union. ECOWAS. Commonwealth. International organisations and treaties.' },
+              { name: 'Global Issues', indicator: 'SHS2.SOC.2.2', content: 'Climate change. Globalisation. Human rights. Peace and conflict. Sustainable development goals.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Information and Communication Technology (Core)',
+        strands: [
+          {
+            name: 'Advanced Computing',
+            subStrands: [
+              { name: 'Database Management', indicator: 'SHS2.ICT.1.1', content: 'Database concepts. Tables, queries, forms, reports. Relational databases. SQL basics. Database design.' },
+              { name: 'Programming', indicator: 'SHS2.ICT.1.2', content: 'Programming concepts (variables, loops, conditionals). Problem-solving with algorithms. Introduction to Python or Visual Basic. Flowcharts and pseudocode.' },
+            ],
+          },
+          {
+            name: 'Digital Literacy',
+            subStrands: [
+              { name: 'Web Technologies', indicator: 'SHS2.ICT.2.1', content: 'Advanced HTML and CSS. JavaScript basics. Web design principles. Content management systems.' },
+              { name: 'Cybersecurity', indicator: 'SHS2.ICT.2.2', content: 'Network security. Threats and vulnerabilities. Encryption. Data protection. Cybersecurity careers.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Physics (Elective)',
+        strands: [
+          {
+            name: 'Waves and Oscillations',
+            subStrands: [
+              { name: 'Wave Motion', indicator: 'SHS2.PHY.1.1', content: 'Types of waves. Wave equation. Superposition. Stationary waves. Sound waves. Doppler effect.' },
+              { name: 'Optics', indicator: 'SHS2.PHY.1.2', content: 'Reflection and refraction of light. Lenses and mirrors. Optical instruments (microscope, telescope). Wave-particle duality.' },
+            ],
+          },
+          {
+            name: 'Electricity and Magnetism',
+            subStrands: [
+              { name: 'Electric Circuits', indicator: 'SHS2.PHY.2.1', content: 'Ohm\'s law. Series and parallel circuits. Kirchhoff\'s laws. Electrical measurements. Internal resistance.' },
+              { name: 'Electromagnetism', indicator: 'SHS2.PHY.2.2', content: 'Magnetic fields. Electromagnetic induction. Transformers. AC circuits. Electromagnetic waves.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Chemistry (Elective)',
+        strands: [
+          {
+            name: 'Chemical Periodicity and Bonding',
+            subStrands: [
+              { name: 'Periodic Properties', indicator: 'SHS2.CHEM.1.1', content: 'Periodic trends (atomic radius, ionisation energy, electronegativity). Periodic law. Groups and periods.' },
+              { name: 'Chemical Bonding and Structure', indicator: 'SHS2.CHEM.1.2', content: 'Ionic, covalent, metallic, and coordinate bonding. Shapes of molecules (VSEPR). Intermolecular forces. Properties of compounds.' },
+            ],
+          },
+          {
+            name: 'Organic Chemistry',
+            subStrands: [
+              { name: 'Hydrocarbons', indicator: 'SHS2.CHEM.2.1', content: 'Alkanes, alkenes, alkynes. Functional groups. Isomerism. Nomenclature. Reactions of hydrocarbons.' },
+              { name: 'Organic Compounds', indicator: 'SHS2.CHEM.2.2', content: 'Alcohols, carboxylic acids, esters. Polymers. Biochemical molecules (carbohydrates, proteins, lipids).' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Biology (Elective)',
+        strands: [
+          {
+            name: 'Physiology',
+            subStrands: [
+              { name: 'Respiration and Gas Exchange', indicator: 'SHS2.BIO.1.1', content: 'Aerobic and anaerobic respiration. Respiratory system in humans. Gas exchange. Respiratory diseases.' },
+              { name: 'Transport Systems', indicator: 'SHS2.BIO.1.2', content: 'Circulatory system (heart, blood vessels, blood). Lymphatic system. Transport in plants. Cardiovascular diseases.' },
+            ],
+          },
+          {
+            name: 'Genetics and Evolution',
+            subStrands: [
+              { name: 'Genetics', indicator: 'SHS2.BIO.2.1', content: 'Mendelian genetics. Monohybrid and dihybrid crosses. Sex determination. Multiple alleles. Genetic disorders.' },
+              { name: 'Evolution', indicator: 'SHS2.BIO.2.2', content: 'Evidence for evolution. Natural selection. Speciation. Human evolution. Classification of organisms.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Economics (Elective)',
+        strands: [
+          {
+            name: 'Microeconomics',
+            subStrands: [
+              { name: 'Theory of Consumer Behaviour', indicator: 'SHS2.ECON.1.1', content: 'Utility analysis. Indifference curves. Budget lines. Consumer equilibrium. Consumer surplus.' },
+              { name: 'Theory of Production', indicator: 'SHS2.ECON.1.2', content: 'Production functions. Law of diminishing returns. Costs of production (fixed, variable, marginal). Economies of scale.' },
+            ],
+          },
+          {
+            name: 'Market Structures',
+            subStrands: [
+              { name: 'Perfect Competition', indicator: 'SHS2.ECON.2.1', content: 'Features of perfect competition. Short-run and long-run equilibrium. Efficiency. Advantages and disadvantages.' },
+              { name: 'Imperfect Competition', indicator: 'SHS2.ECON.2.2', content: 'Monopoly. Oligopoly. Monopolistic competition. Price discrimination. Market failure.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Government (Elective)',
+        strands: [
+          {
+            name: 'Government Institutions',
+            subStrands: [
+              { name: 'The Executive', indicator: 'SHS2.GOV.1.1', content: 'Powers and functions of the executive. The President and cabinet. Civil service. Executive agencies.' },
+              { name: 'The Legislature', indicator: 'SHS2.GOV.1.2', content: 'Parliament of Ghana. Functions of parliament. Law-making process. Parliamentary committees. Legislative oversight.' },
+              { name: 'The Judiciary', indicator: 'SHS2.GOV.1.3', content: 'Court system in Ghana. Judicial independence. Judicial review. Rule of law. Human rights enforcement.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Literature in English (Elective)',
+        strands: [
+          {
+            name: 'Prose and Poetry',
+            subStrands: [
+              { name: 'Prose Analysis', indicator: 'SHS2.LIT.1.1', content: 'Analysis of set prose texts. Narrative techniques. Character development. Themes and motifs. Setting and atmosphere.' },
+              { name: 'Poetry Analysis', indicator: 'SHS2.LIT.1.2', content: 'Types of poetry. Poetic devices (imagery, metaphor, personification, symbolism). Tone and mood. Scansion and rhythm.' },
+            ],
+          },
+          {
+            name: 'Drama',
+            subStrands: [
+              { name: 'Dramatic Literature', indicator: 'SHS2.LIT.2.1', content: 'Elements of drama (plot, character, dialogue, stage directions). Types of drama (tragedy, comedy, tragicomedy). African drama. Shakespeare.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Geography (Elective)',
+        strands: [
+          {
+            name: 'Human Geography',
+            subStrands: [
+              { name: 'Population Geography', indicator: 'SHS2.GEO.1.1', content: 'Population distribution and density. Population growth. Migration. Demographic transition. Population policies.' },
+              { name: 'Settlement Geography', indicator: 'SHS2.GEO.1.2', content: 'Types of settlements (rural and urban). Urbanisation. Urban problems. Settlement patterns. Housing.' },
+            ],
+          },
+          {
+            name: 'Economic Geography',
+            subStrands: [
+              { name: 'Agriculture and Industry', indicator: 'SHS2.GEO.2.1', content: 'Types of agriculture. Agricultural systems. Industrial location factors. Manufacturing. Mining and energy.' },
+              { name: 'Transport and Trade', indicator: 'SHS2.GEO.2.2', content: 'Transport systems (road, rail, water, air). Transport and development. International trade. Regional trade blocs.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Accounting (Elective)',
+        strands: [
+          {
+            name: 'Financial Accounting',
+            subStrands: [
+              { name: 'Final Accounts', indicator: 'SHS2.ACC.1.1', content: 'Trading account. Profit and loss account. Balance sheet. Adjustments (accruals, prepayments, depreciation, bad debts).' },
+              { name: 'Partnership Accounts', indicator: 'SHS2.ACC.1.2', content: 'Partnership formation. Profit sharing. Partners\' capital and current accounts. Admission and retirement of partners. Dissolution.' },
+            ],
+          },
+          {
+            name: 'Cost Accounting',
+            subStrands: [
+              { name: 'Elements of Cost', indicator: 'SHS2.ACC.2.1', content: 'Material cost. Labour cost. Overheads. Cost classification. Cost centres. Job costing.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Business Management (Elective)',
+        strands: [
+          {
+            name: 'Business Operations',
+            subStrands: [
+              { name: 'Marketing', indicator: 'SHS2.BM.1.1', content: 'Marketing concept. Market segmentation. Marketing mix (4Ps). Consumer behaviour. Advertising and promotion.' },
+              { name: 'Human Resource Management', indicator: 'SHS2.BM.1.2', content: 'Recruitment and selection. Training and development. Performance appraisal. Motivation theories. Industrial relations.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'History (Elective)',
+        strands: [
+          {
+            name: 'West Africa and the Wider World',
+            subStrands: [
+              { name: 'Colonial West Africa', indicator: 'SHS2.HIS.1.1', content: 'Scramble for Africa. Colonial administration (British, French, Portuguese). Impact of colonial rule. Nationalist movements in West Africa.' },
+              { name: 'Post-Independence West Africa', indicator: 'SHS2.HIS.1.2', content: 'Independence movements. Formation of ECOWAS. Political instability. Economic challenges. Regional cooperation.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'French (Elective)',
+        strands: [
+          {
+            name: 'Advanced Language Skills',
+            subStrands: [
+              { name: 'Grammar and Composition', indicator: 'SHS2.FR.1.1', content: 'French verb tenses (passé composé, imparfait, futur simple). Pronouns. Adjectives and adverbs. Writing compositions and letters in French.' },
+              { name: 'Reading and Literature', indicator: 'SHS2.FR.1.2', content: 'Reading French literature. French short stories. African Francophone literature. Comprehension exercises.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Physical Education (Core)',
+        strands: [
+          {
+            name: 'Sports Science',
+            subStrands: [
+              { name: 'Anatomy and Physiology for Sport', indicator: 'SHS2.PE.1.1', content: 'Skeletal system and movement. Muscular system. Cardiovascular fitness. Flexibility. Sports injuries and prevention.' },
+              { name: 'Sports Organisation', indicator: 'SHS2.PE.1.2', content: 'Tournament organisation. Rules of sports. Officiating. Sports administration. Inter-house and inter-schools competitions.' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+
+  // ── SHS 3 (Senior High School Year 3) ──
+  {
+    key: 'shs3',
+    label: 'SHS 3',
+    level: 'shs',
+    subjects: [
+      {
+        name: 'English Language',
+        strands: [
+          {
+            name: 'Examination Preparation',
+            subStrands: [
+              { name: 'WASSCE Essay Writing', indicator: 'SHS3.ENG.1.1', content: 'WASSCE essay types and formats. Time management in exams. Past question practice. Common errors to avoid. Marking scheme analysis.' },
+              { name: 'Comprehension and Summary', indicator: 'SHS3.ENG.1.2', content: 'WASSCE comprehension passages. Summary writing techniques. Vocabulary questions. Critical analysis. Past paper practice.' },
+            ],
+          },
+          {
+            name: 'Literature Review',
+            subStrands: [
+              { name: 'Set Texts Review', indicator: 'SHS3.ENG.2.1', content: 'Comprehensive review of all set texts. Character analysis. Theme identification. Contextual questions. Likely exam questions.' },
+              { name: 'Poetry and Drama Review', indicator: 'SHS3.ENG.2.2', content: 'Review of set poems and plays. Key quotations. Dramatic techniques. Poetic devices. Exam-style questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Mathematics (Core)',
+        strands: [
+          {
+            name: 'WASSCE Preparation',
+            subStrands: [
+              { name: 'Algebra and Calculus Review', indicator: 'SHS3.MATH.1.1', content: 'Comprehensive review of algebra, functions, and calculus. Integration techniques. Applications of calculus. WASSCE past questions.' },
+              { name: 'Geometry and Statistics Review', indicator: 'SHS3.MATH.1.2', content: 'Review of coordinate geometry, trigonometry, statistics, and probability. Vectors and matrices. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Integrated Science (Core)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Biology Revision', indicator: 'SHS3.SCI.1.1', content: 'Comprehensive review of cells, genetics, reproduction, nutrition, and ecology. WASSCE past questions. Practical examination preparation.' },
+              { name: 'Chemistry Revision', indicator: 'SHS3.SCI.1.2', content: 'Review of atomic structure, bonding, chemical reactions, acids/bases, and organic chemistry. WASSCE past questions. Practical skills.' },
+              { name: 'Physics Revision', indicator: 'SHS3.SCI.1.3', content: 'Review of mechanics, waves, electricity, and energy. WASSCE past questions. Problem-solving strategies.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Social Studies (Core)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Governance and Economics Review', indicator: 'SHS3.SOC.1.1', content: 'Comprehensive review of governance, politics, economic activities, and national development. WASSCE past questions. Essay techniques.' },
+              { name: 'International Relations Review', indicator: 'SHS3.SOC.1.2', content: 'Review of Ghana\'s foreign policy, international organisations, and global issues. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Information and Communication Technology (Core)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'ICT Concepts Review', indicator: 'SHS3.ICT.1.1', content: 'Comprehensive review of computer systems, networks, productivity software, programming, and web technologies. WASSCE past questions.' },
+              { name: 'Practical Skills', indicator: 'SHS3.ICT.1.2', content: 'Practical examination preparation. Word processing tasks. Spreadsheet tasks. Database tasks. Web design tasks.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Physics (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Mechanics and Waves Review', indicator: 'SHS3.PHY.1.1', content: 'Comprehensive review of motion, forces, energy, waves, and optics. Problem-solving strategies. WASSCE past questions.' },
+              { name: 'Electricity and Modern Physics', indicator: 'SHS3.PHY.1.2', content: 'Review of electricity, magnetism, atomic physics, and nuclear physics. WASSCE past questions. Practical examination preparation.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Chemistry (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Physical Chemistry Review', indicator: 'SHS3.CHEM.1.1', content: 'Review of atomic structure, bonding, stoichiometry, energetics, rates of reaction, and equilibrium. WASSCE past questions.' },
+              { name: 'Organic and Inorganic Chemistry Review', indicator: 'SHS3.CHEM.1.2', content: 'Review of organic chemistry, periodicity, acids/bases, and qualitative analysis. WASSCE past questions. Practical skills.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Biology (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Cell Biology and Genetics Review', indicator: 'SHS3.BIO.1.1', content: 'Review of cell structure, transport, cell division, genetics, and evolution. WASSCE past questions. Practical drawing skills.' },
+              { name: 'Physiology and Ecology Review', indicator: 'SHS3.BIO.1.2', content: 'Review of human physiology, plant physiology, ecology, and conservation. WASSCE past questions. Practical examination preparation.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Economics (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Microeconomics Review', indicator: 'SHS3.ECON.1.1', content: 'Review of demand and supply, consumer theory, production theory, and market structures. WASSCE past questions.' },
+              { name: 'Macroeconomics Review', indicator: 'SHS3.ECON.1.2', content: 'Review of national income, money and banking, international trade, and economic development. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Government (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Political Systems Review', indicator: 'SHS3.GOV.1.1', content: 'Review of basic concepts, constitutions, arms of government, electoral systems, and political ideologies. WASSCE past questions.' },
+              { name: 'International Relations Review', indicator: 'SHS3.GOV.1.2', content: 'Review of foreign policy, international organisations, and Ghana\'s international relations. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Literature in English (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Set Texts Final Review', indicator: 'SHS3.LIT.1.1', content: 'Final review of all WASSCE set texts (African and non-African). Key passages, themes, and characters. Likely exam questions and model answers.' },
+              { name: 'Unseen Poems and Passages', indicator: 'SHS3.LIT.1.2', content: 'Techniques for analysing unseen poems and prose passages. Timed practice. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Geography (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Physical Geography Review', indicator: 'SHS3.GEO.1.1', content: 'Review of earth structure, rocks, climate, vegetation, and landforms. Map reading and interpretation. WASSCE past questions.' },
+              { name: 'Human and Economic Geography Review', indicator: 'SHS3.GEO.1.2', content: 'Review of population, settlement, agriculture, industry, transport, and trade. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Accounting (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Financial Accounting Review', indicator: 'SHS3.ACC.1.1', content: 'Review of final accounts, partnerships, company accounts, and adjustments. WASSCE past questions. Problem-solving techniques.' },
+              { name: 'Cost Accounting Review', indicator: 'SHS3.ACC.1.2', content: 'Review of cost elements, job costing, process costing, and budgeting. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Business Management (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Business Management Review', indicator: 'SHS3.BM.1.1', content: 'Review of management principles, organisational structure, marketing, HRM, and business finance. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'History (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Ghana History Review', indicator: 'SHS3.HIS.1.1', content: 'Review of pre-colonial, colonial, and post-independence Ghana. Key figures and events. WASSCE past questions.' },
+              { name: 'West African and World History Review', indicator: 'SHS3.HIS.1.2', content: 'Review of West African history, colonialism, pan-Africanism, and major world events. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'French (Elective)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'French Language Review', indicator: 'SHS3.FR.1.1', content: 'Review of French grammar, vocabulary, comprehension, and composition. Oral examination preparation. WASSCE past questions.' },
+              { name: 'French Literature Review', indicator: 'SHS3.FR.1.2', content: 'Review of set French literary texts. Themes, characters, and style. WASSCE past questions.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Elective Mathematics',
+        strands: [
+          {
+            name: 'Advanced Topics',
+            subStrands: [
+              { name: 'Calculus and Analysis', indicator: 'SHS3.EMATH.1.1', content: 'Integration techniques. Applications of integration (area, volume). Differential equations. Maclaurin and Taylor series.' },
+              { name: 'Vectors and Matrices', indicator: 'SHS3.EMATH.1.2', content: 'Vector algebra. Scalar and vector products. Equations of lines and planes. Matrix operations. Determinants. Systems of equations.' },
+            ],
+          },
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Comprehensive Review', indicator: 'SHS3.EMATH.2.1', content: 'Review of all elective mathematics topics. WASSCE past questions. Problem-solving strategies. Time management.' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'Physical Education (Core)',
+        strands: [
+          {
+            name: 'WASSCE Revision',
+            subStrands: [
+              { name: 'Physical Education Review', indicator: 'SHS3.PE.1.1', content: 'Review of physical fitness, sports science, sports organisation, and health education. WASSCE past questions. Practical assessment.' },
             ],
           },
         ],

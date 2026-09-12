@@ -90,17 +90,17 @@ export class GESLessonPlanGenerator {
     const indicator = weekContent?.indicator || subject?.strands[0]?.subStrands[0]?.indicator || 'N/A';
     const contentStandard = weekContent?.content || subject?.strands[0]?.subStrands[0]?.content || 'Content as per curriculum';
 
-    const duration = req.duration || (classLevel?.level === 'kg' ? '30 minutes' : '45 minutes');
+    const duration = req.duration || (classLevel?.level === 'kg' ? '30 minutes' : classLevel?.level === 'shs' ? '60 minutes' : '45 minutes');
     const tlms = TLMS_BY_SUBJECT[req.subject] || ['Textbook', 'Whiteboard and markers', 'Charts', 'Real objects'];
 
     const level = classLevel?.level || 'primary';
     const objectives = req.objectives || this.generateObjectives(topic, req.subject, indicator, level);
-    const teachingStyle = req.teachingStyle || (level === 'kg' ? 'Play-based, activity-centred' : level === 'jhs' ? 'Inquiry-based, collaborative' : 'Direct instruction with guided practice');
+    const teachingStyle = req.teachingStyle || (level === 'kg' ? 'Play-based, activity-centred' : level === 'jhs' ? 'Inquiry-based, collaborative' : level === 'shs' ? 'Lecture-discussion, problem-based learning, research-oriented' : 'Direct instruction with guided practice');
 
     const starter = this.generateStarter(topic, level, req.subject);
     const mainActivity = this.generateMainActivity(topic, contentStandard, level, req.subject, teachingStyle);
     const plenary = this.generatePlenary(topic, level);
-    const assessment = this.generateAssessment(topic, level, indicator);
+    const assessment = this.generateAssessment(topic, level, indicator, req.subject);
     const homework = this.generateHomework(topic, level, req.subject);
     const differentiation = this.generateDifferentiation(level);
 
@@ -263,7 +263,7 @@ export class GESLessonPlanGenerator {
   // ── Private generation helpers ──
 
   private generateObjectives(topic: string, subject: string, indicator: string, level: string): string {
-    const verbs = level === 'kg' ? ['identify', 'name', 'describe', 'match', 'sort'] : level === 'jhs' ? ['analyse', 'evaluate', 'construct', 'apply', 'investigate'] : ['identify', 'describe', 'explain', 'demonstrate', 'apply'];
+    const verbs = level === 'kg' ? ['identify', 'name', 'describe', 'match', 'sort'] : level === 'jhs' ? ['analyse', 'evaluate', 'construct', 'apply', 'investigate'] : level === 'shs' ? ['analyse', 'evaluate', 'synthesise', 'apply', 'critique', 'formulate'] : ['identify', 'describe', 'explain', 'demonstrate', 'apply'];
     const verb = verbs[0];
     const verb2 = verbs[1];
     const verb3 = verbs[2];
@@ -290,6 +290,15 @@ export class GESLessonPlanGenerator {
 • Invite 2–3 learners to share their thoughts.
 • Connect to previous lesson and state today's learning objectives.
 • Write the lesson topic on the board.`;
+    }
+    if (level === 'shs') {
+      return `**Phase 1: Starter (5–10 minutes)**
+• Begin with a real-world scenario or case study related to ${topic}.
+• Pose a critical thinking question: "How does ${topic} affect our society/economy/environment?"
+• Allow students to brainstorm in pairs for 2–3 minutes.
+• Invite 2–3 students to share their perspectives.
+• Connect to previous lesson and state today's learning objectives clearly.
+• Write the lesson topic and key terms on the board.`;
     }
     return `**Phase 1: Starter (5–10 minutes)**
 • Review the previous lesson briefly by asking 2–3 recall questions.
@@ -345,6 +354,34 @@ export class GESLessonPlanGenerator {
 • Provide a real-life scenario where ${topic} is applied.
 • Ask learners to explain how they would apply what they have learned.`;
     }
+    if (level === 'shs') {
+      return `**Phase 2: Main Body (30–40 minutes)**
+
+**Step 1: Lecture and Explanation (10 minutes)**
+• Present the key concepts of ${topic} using detailed explanations, derivations, and examples.
+• Write key formulas, definitions, and diagrams on the board.
+• Use real-world examples and case studies to illustrate concepts.
+• Check understanding through targeted questioning: "Explain why..." "What would happen if...?"
+
+**Step 2: Guided Problem-Solving (10 minutes)**
+• Work through 2–3 worked examples step-by-step with the class.
+• Call students to the board to solve problems.
+• Provide immediate feedback and address misconceptions.
+• Emphasise proper methodology and presentation of solutions.
+
+**Step 3: Group/Independent Practice (10–15 minutes)**
+• Assign practice problems or tasks related to ${topic} at varying difficulty levels.
+• Students work individually or in small groups (3–4 per group).
+• Teacher moves around to monitor progress and provide support.
+• Challenge advanced students with extension problems.
+• Address common errors and misconceptions.
+
+**Step 4: Class Discussion and Synthesis (5 minutes)**
+• Discuss solutions as a class.
+• Compare different approaches to solving the same problem.
+• Synthesise key concepts and connect to broader themes in ${subject}.
+• Relate ${topic} to WASSCE examination requirements where applicable.`;
+    }
     return `**Phase 2: Main Body (15–25 minutes)**
 
 **Step 1: Presentation (7 minutes)**
@@ -385,7 +422,7 @@ export class GESLessonPlanGenerator {
 • Assign homework.`;
   }
 
-  private generateAssessment(topic: string, level: string, indicator: string): string {
+  private generateAssessment(topic: string, level: string, indicator: string, subject?: string): string {
     if (level === 'kg') {
       return `**Assessment (AfL — Assessment for Learning)**
 • Observe learners during activities — are they engaged and attempting tasks?
@@ -402,6 +439,17 @@ export class GESLessonPlanGenerator {
   1. Define ${topic}.
   2. Give two examples of ${topic}.
   3. Explain the importance of ${topic}.
+(Aligned to indicator: ${indicator})`;
+    }
+    if (level === 'shs') {
+      return `**Assessment (AfL, AaL, AoL)**
+• **AfL**: Oral questioning during the lesson — "Explain the concept of…" "Distinguish between…" "Justify why…"
+• **AaL**: Peer assessment of group work and presentations — students evaluate each other using rubrics.
+• **AoL**: Written exit ticket or short test with 3–4 questions:
+  1. Define ${topic} and state its key principles.
+  2. Solve/Explain: [Teacher inserts a WASSCE-style question on ${topic}].
+  3. Apply ${topic} to solve a real-world problem.
+  4. Critically evaluate the significance of ${topic} in ${subject}.
 (Aligned to indicator: ${indicator})`;
     }
     return `**Assessment (AfL — Assessment for Learning)**
@@ -423,6 +471,13 @@ export class GESLessonPlanGenerator {
 1. Research and write a short paragraph (5–7 sentences) on ${topic}.
 2. Find two real-life examples of ${topic} in your community and describe them.
 3. Prepare one question about ${topic} to ask in the next lesson.`;
+    }
+    if (level === 'shs') {
+      return `**Homework/Assignment**
+1. Solve the following WASSCE past questions on ${topic}: [Teacher selects 2–3 past questions].
+2. Write a one-page essay explaining the key concepts of ${topic} with examples.
+3. Research one real-world application of ${topic} and write a summary (200–300 words).
+4. Prepare for a short class test on ${topic} in the next lesson.`;
     }
     return `**Homework/Assignment**
 1. Write down 3 things you learned about ${topic} today.
@@ -447,9 +502,10 @@ export class GESLessonPlanGenerator {
   private selectCoreCompetencies(subject: string, level: string): string[] {
     const comps = ['Critical Thinking and Problem Solving (CP)', 'Communication and Collaboration (CC)'];
     if (subject === 'Creative Arts' || subject === 'Creative Arts and Design') comps.push('Creativity and Innovation (CI)');
-    if (subject === 'Our World Our People' || subject === 'Social Studies' || subject === 'History') comps.push('Cultural Identity and Global Citizenship (CG)');
-    if (subject === 'Computing') comps.push('Digital Literacy (DL)');
-    comps.push('Personal Development and Leadership (PL)');
+    if (subject === 'Our World Our People' || subject === 'Social Studies' || subject === 'History' || subject === 'Government') comps.push('Cultural Identity and Global Citizenship (CG)');
+    if (subject === 'Computing' || subject === 'Information and Communication Technology (Core)') comps.push('Digital Literacy (DL)');
+    if (level === 'shs') comps.push('Personal Development and Leadership (PL)');
+    else comps.push('Personal Development and Leadership (PL)');
     return comps.slice(0, 4);
   }
 
