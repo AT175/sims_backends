@@ -35,8 +35,11 @@ export class SyncController {
     const items = Array.isArray(body) ? body : [body];
     const validOperations = ['create', 'update', 'delete'];
     const validEntities = [
+      'students', 'exam_results', 'attendance', 'fee_records',
+      'lesson_plans', 'assignments', 'lesson_recaps',
+      'gradebook', 'behavior_notes', 'counselling_cases',
       'student', 'admission', 'user',
-      'staff', 'attendance', 'exam_result', 'report_card',
+      'staff', 'exam_result', 'report_card',
       'timetable', 'exam', 'curriculum', 'transcript',
       'fee_payment', 'expenditure', 'lesson_material',
       'assignment', 'submission', 'assessment',
@@ -65,11 +68,14 @@ export class SyncController {
   ) {
     const tenantId = req.user.tenantId;
     const validTables = [
-      'students', 'admissions', 'users',
-      'staff', 'attendance', 'exam_results', 'report_cards',
+      'students', 'exam_results', 'attendance', 'fee_records',
+      'lesson_plans', 'assignments', 'lesson_recaps',
+      'gradebook', 'behavior_notes', 'counselling_cases',
+      'admissions', 'users',
+      'staff', 'report_cards',
       'timetables', 'exams', 'curriculum', 'transcripts',
       'fee_payments', 'expenditure_entries',
-      'lesson_materials', 'assignments', 'submissions', 'assessments',
+      'lesson_materials', 'submissions', 'assessments',
     ];
     if (!table || !validTables.includes(table)) {
       throw new BadRequestException(`Invalid table: ${table}`);

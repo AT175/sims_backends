@@ -41,6 +41,13 @@ import { SrcModule } from './src/src.module';
 import { WelfareModule } from './welfare/welfare.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { GesModule } from './ges/ges.module';
+import { WhatsappModule } from './whatsapp/whatsapp.module';
+import { AnalyticsModule } from './analytics/analytics.module';
+import { VoiceModule } from './voice/voice.module';
+import { VirtualLabModule } from './virtual-lab/virtual-lab.module';
+import { TutorModule } from './tutor/tutor.module';
+import { CareerModule } from './career/career.module';
+import { PeerModule } from './peer/peer.module';
 import { RolesGuard } from './auth/roles.guard';
 import { Reflector } from '@nestjs/core';
 
@@ -114,6 +121,13 @@ import { Reflector } from '@nestjs/core';
     WelfareModule,
     SubscriptionModule,
     GesModule,
+    WhatsappModule,
+    AnalyticsModule,
+    VoiceModule,
+    VirtualLabModule,
+    TutorModule,
+    CareerModule,
+    PeerModule,
   ],
   providers: [
     {
