@@ -539,6 +539,11 @@ export class AuthService {
       throw new BadRequestException('Only a System Administrator can assign the system_admin role');
     }
 
+    // Only system_admin can assign the investor role
+    if (!isSystemAdmin && data.roles.includes('investor')) {
+      throw new BadRequestException('Only a System Administrator can assign the investor role');
+    }
+
     // Generate a unique random password if none provided
     let generatedPassword: string | undefined;
     let password = data.password;
@@ -756,6 +761,10 @@ export class AuthService {
       const isSystemAdmin = creatorRoles.includes('system_admin');
       if (!isSystemAdmin && data.roles.includes('system_admin')) {
         throw new BadRequestException('Only a System Administrator can assign the system_admin role');
+      }
+      // Only system_admin can assign the investor role
+      if (!isSystemAdmin && data.roles.includes('investor')) {
+        throw new BadRequestException('Only a System Administrator can assign the investor role');
       }
       user.roles = data.roles;
       user.activeRole = data.roles[0] || user.activeRole;

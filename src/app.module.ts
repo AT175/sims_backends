@@ -48,6 +48,7 @@ import { VirtualLabModule } from './virtual-lab/virtual-lab.module';
 import { TutorModule } from './tutor/tutor.module';
 import { CareerModule } from './career/career.module';
 import { PeerModule } from './peer/peer.module';
+import { InvestorModule } from './investor/investor.module';
 import { RolesGuard } from './auth/roles.guard';
 import { Reflector } from '@nestjs/core';
 
@@ -128,6 +129,7 @@ import { Reflector } from '@nestjs/core';
     TutorModule,
     CareerModule,
     PeerModule,
+    InvestorModule,
   ],
   providers: [
     {
